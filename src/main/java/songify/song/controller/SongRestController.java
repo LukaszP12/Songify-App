@@ -55,10 +55,10 @@ public class SongRestController {
     public ResponseEntity<SingleSongResponseDto> getSongById(@PathVariable Integer id, @RequestHeader(required = false)
     String requestId) {
         log.info(requestId);
-        String song = database.get(id);
-        if (song == null) {
-            return ResponseEntity.notFound().build();
+        if (!database.containsKey(id)) {
+            throw new SongNotFoundException("Song with id " + id + " not found");
         }
+        String song = database.get(id);
         SingleSongResponseDto response = new SingleSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
