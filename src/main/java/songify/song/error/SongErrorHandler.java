@@ -20,3 +20,4 @@ public class SongErrorHandler {
         return new ErrorSongResponseDto(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
+
