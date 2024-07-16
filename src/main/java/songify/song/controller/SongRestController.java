@@ -8,15 +8,18 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import songify.song.dto.request.UpdateSongRequestDto;
+import songify.song.dto.request.UpdateSongResponseDto;
 import songify.song.error.SongNotFoundException;
-import songify.song.dto.DeleteSongResponseDto;
-import songify.song.dto.SingleSongResponseDto;
-import songify.song.dto.SongRequestDto;
-import songify.song.dto.SongResponseDto;
+import songify.song.dto.response.DeleteSongResponseDto;
+import songify.song.dto.response.SingleSongResponseDto;
+import songify.song.dto.response.SongRequestDto;
+import songify.song.dto.response.SongResponseDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,5 +81,17 @@ public class SongRestController {
         }
         database.remove(id);
         return ResponseEntity.ok(new DeleteSongResponseDto("You deleted song with id: " + id, HttpStatus.OK));
+    }
+
+    @PutMapping("/songs/{id}")
+    public ResponseEntity<UpdateSongResponseDto> update(@PathVariable Integer id,
+                                                        @RequestBody UpdateSongRequestDto request) {
+        if (!database.containsKey(id)) {
+            throw new SongNotFoundException("Song with id " + id + " not found");
+        }
+        String songNameToUpdate = request.songName();
+        database.put(id, songNameToUpdate);
+        log.info("Updated song with id: " + id + " with songName: " + songNameToUpdate);
+        return ResponseEntity.ok(new UpdateSongResponseDto(songNameToUpdate));
     }
 }
