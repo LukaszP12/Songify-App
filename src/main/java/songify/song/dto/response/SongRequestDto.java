@@ -1,4 +1,4 @@
-package songify.song.dto;
+package songify.song.dto.response;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
