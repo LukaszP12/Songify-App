@@ -75,8 +75,6 @@ public class SongRestController {
     public ResponseEntity<DeleteSongResponseDto> deleteSongByIdUsingPathVariable(@PathVariable Integer id) {
         if (!database.containsKey(id)) {
             throw new SongNotFoundException("Song with id " + id + " not found ");
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(new ErrorDeleteSongResponseDto("Song with id " + id + " not found ", HttpStatus.NOT_FOUND));
         }
         database.remove(id);
         return ResponseEntity.ok(new DeleteSongResponseDto("You deleted song with id: " + id, HttpStatus.OK));
