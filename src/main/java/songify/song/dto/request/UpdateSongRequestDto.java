@@ -1,4 +1,7 @@
 package songify.song.dto.request;
 
-public record UpdateSongRequestDto(String song) {
+public record UpdateSongRequestDto(
+        String songName
+        ,String artistName) {
+
 }
