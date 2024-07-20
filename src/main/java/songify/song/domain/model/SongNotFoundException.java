@@ -1,4 +1,4 @@
-package songify.song.error;
+package songify.song.domain.model;
 
 public class SongNotFoundException extends RuntimeException {
     public SongNotFoundException(String message) {
