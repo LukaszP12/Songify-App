@@ -2,8 +2,10 @@ package songify.song.infrastructure;
 
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +29,7 @@ import songify.song.infrastructure.controller.dto.response.GetAllSongsResponseDt
 import songify.song.infrastructure.controller.dto.response.GetSongResponseDto;
 import songify.song.infrastructure.controller.dto.response.PartiallyUpdateSongResponseDto;
 import songify.song.infrastructure.controller.dto.response.UpdateSongResponseDto;
+import songify.song.infrastructure.controller.error.ErrorSongResponseDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,6 +78,15 @@ public class SongRestController {
         Song song = songRetreiver.findAll().get(id);
         GetSongResponseDto response = new GetSongResponseDto(song);
         return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(SongNotFoundException.class)
+    public ResponseEntity<ErrorSongResponseDto> handleException(SongNotFoundException exception) {
+        log.warn("SongNotFoundException while accessing song");
+        ErrorSongResponseDto errorSongResponseDto = new ErrorSongResponseDto(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(errorSongResponseDto);
     }
 
     @PostMapping(consumes = "application/json")

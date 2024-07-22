@@ -2,15 +2,14 @@ package songify.song.infrastructure.controller.error;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import songify.song.infrastructure.SongRestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import songify.song.domain.model.SongNotFoundException;
+import songify.song.infrastructure.SongRestController;
 
-@ControllerAdvice(assignableTypes = SongRestController.class)
+@RestControllerAdvice(assignableTypes = SongRestController.class)
 @Log4j2
 public class SongErrorHandler {
 
