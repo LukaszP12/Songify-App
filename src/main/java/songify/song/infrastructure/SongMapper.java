@@ -1,4 +1,4 @@
-package songify.song.domain.service;
+package songify.song.infrastructure;
 
 import org.springframework.http.HttpStatus;
 import songify.song.domain.model.Song;
@@ -21,7 +21,9 @@ public class SongMapper {
     }
 
     public static Song mapFromUpdateSongRequestDtoToSong(UpdateSongRequestDto dto) {
-        return new Song(dto.songName(), dto.artistName());
+        String newSongName = dto.songName();
+        String newArtist = dto.artistName();
+        return new Song(newSongName, newArtist);
     }
 
     public static Song mapFromPartiallyUpdateSongRequestDtoToSong(PartiallyUpdateSongRequestDto dto) {

@@ -1,4 +1,4 @@
-package songify.song.controller;
+package songify.song.infrastructure;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

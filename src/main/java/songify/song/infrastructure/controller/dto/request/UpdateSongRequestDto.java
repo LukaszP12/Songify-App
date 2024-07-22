@@ -1,4 +1,4 @@
-package songify.song.dto.request;
+package songify.song.infrastructure.controller.dto.request;
 
 public record UpdateSongRequestDto(
         String songName
