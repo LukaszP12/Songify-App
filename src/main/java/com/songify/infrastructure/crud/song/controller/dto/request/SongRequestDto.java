@@ -1,15 +1,15 @@
 package com.songify.infrastructure.crud.song.controller.dto.request;
 
-import com.songify.domain.crud.song.dto.SongLanguageDto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.Instant;
-
 public record SongRequestDto(
-        String name,
-        Instant releaseDate,
-        Long duration,
-        SongLanguageDto language
+        @NotNull(message = "songName must not be null")
+        @NotEmpty(message = "songName must not be empty")
+        String songName,
+
+        @NotNull(message = "artistName must not be null")
+        @NotEmpty(message = "artistName must not be empty")
+        String artistName
 ) {
 }

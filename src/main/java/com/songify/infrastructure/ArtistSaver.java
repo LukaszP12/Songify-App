@@ -1,4 +1,4 @@
-package songify.song.infrastructure;
+package com.songify.infrastructure;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;

@@ -7,7 +7,8 @@ import com.songify.domain.crud.song.dto.ArtistRequestDto;
 import com.songify.domain.crud.song.dto.GenreDto;
 import com.songify.domain.crud.song.dto.GenreRequestDto;
 import com.songify.domain.crud.song.dto.SongDto;
-import com.songify.infrastructure.crud.song.controller.dto.request.SongRequestDto;
+import com.songify.domain.crud.song.dto.SongRequestDto;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class SongifyCrudFacade {
         return albumAdder.addAlbum(dto.songId(), dto.title(), dto.releaseDate());
     }
 
-    public SongDto addSong(final SongRequestDto dto) {
+    public SongDto addSong(final @Valid SongRequestDto dto) {
         return songAdder.addSong(dto);
     }
 
@@ -116,4 +117,9 @@ public class SongifyCrudFacade {
 
     }
 
+    public void deleteSongById(Long id) {
+    }
+
+    public void assignGenreToSong(Long genreId, Long songId) {
+    }
 }

@@ -1,4 +1,5 @@
-package songify.apivalidation;
+package com.songify.infrastructure.apivalidation;
+import com.songify.infrastructure.crud.song.controller.SongRestController;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 
 import org.springframework.http.HttpStatus;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import songify.song.infrastructure.SongRestController;
 
 import java.util.List;
 import java.util.stream.Collectors;

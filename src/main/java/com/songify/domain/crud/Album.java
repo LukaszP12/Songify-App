@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @Getter(AccessLevel.PACKAGE)
 @Setter(AccessLevel.PACKAGE)
 class Album extends BaseEntity {
+
     @Id
     @GeneratedValue(generator = "album_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(
