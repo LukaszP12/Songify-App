@@ -118,5 +118,20 @@ class HappyPathIntegrationTest {
 
         // then
     }
+    // 4. when I go to /genre then I can see only default genre with 1
+    @Test
+    public void f3() throws Exception {
+        // given
+        mockMvc.perform(post("/genres")
+                        .content(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.genres[0].id",is(1)))
+                .andExpect(jsonPath("$.genres[0].name",is("default")));
+        // when
+
+        // then
+
+    }
 
 }
