@@ -19,8 +19,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.hamcrest.Matchers.*;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -65,11 +67,12 @@ class HappyPathIntegrationTest {
         GetAllSongsResponseDto allSongsResponseDto = objectMapper.readValue(contentAsString, GetAllSongsResponseDto.class);
         assertThat(allSongsResponseDto.songs()).hasSize(4);
     }
+
     // 2.when I post to /song with Song "Till I collapse" then Song "Till I collapse" is returned with id 1
     @Test
     public void f1() throws Exception {
         // given
-        mockMvc.perform(post("/songs")
+        ResultActions perform = mockMvc.perform(post("/songs")
                 .content("""
                         {
                           "name": "Till i collapse",
@@ -81,9 +84,39 @@ class HappyPathIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         // when
+        String contentAsString = perform.andReturn().getResponse().getContentAsString();
+        // then
+        perform
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.song.id", is(1)))
+                .andExpect(jsonPath("$.song.name", is("Till i collapse")))
+                .andExpect(jsonPath("$.song.genre.id", is(1)))
+                .andExpect(jsonPath("$.song.genre.name", is("default")));
+    }
+
+    // 3. when I post to /song with Song "Lose Yourself" then Song "Lose Yourself" is returned with id 2
+    @Test
+    public void f2() throws Exception {
+        // given
+        ResultActions perform = mockMvc.perform(post("/songs")
+                        .content(
+                                """
+                                        {
+                                          "name": "Lose Yourself",
+                                          "releaseDate": "2024-03-15T13:55:21.850Z",
+                                          "duration": 0,
+                                          "language": "ENGLISH"
+                                        }
+                                        """.trim())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.song.id", is(2)))
+                .andExpect(jsonPath("$.song.name", is("Lose Yourself")))
+                .andExpect(jsonPath("$.song.genre.id", is(1)))
+                .andExpect(jsonPath("$.song.genre.name", is("default")));
+        // when
 
         // then
-
     }
 
 }
