@@ -150,10 +150,12 @@ class HappyPathIntegrationTest {
     @Test
     public void f5() throws Exception {
         mockMvc.perform(get("/songs/1")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-        )
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.song.genre.id",is(1)))
-                .andExpect(jsonPath("$.song.genre.name",is("default")));
+                .andExpect(jsonPath("$.song.genre.id", is(1)))
+                .andExpect(jsonPath("$.song.name", is("Till i collapse")))
+                .andExpect(jsonPath("$.song.id", is(1)))
+                .andExpect(jsonPath("$.song.genre.name", is("default")));
     }
 }
