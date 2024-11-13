@@ -1,9 +1,7 @@
 package feature;
 
 import com.songify.SongifyApplication;
-import com.songify.domain.crud.song.dto.SongDto;
 import com.songify.infrastructure.crud.song.controller.dto.response.GetAllSongsResponseDto;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,13 +18,10 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 @SpringBootTest(classes = SongifyApplication.class)
@@ -71,6 +66,24 @@ class HappyPathIntegrationTest {
         assertThat(allSongsResponseDto.songs()).hasSize(4);
     }
     // 2.when I post to /song with Song "Till I collapse" then Song "Till I collapse" is returned with id 1
+    @Test
+    public void f1() throws Exception {
+        // given
+        mockMvc.perform(post("/songs")
+                .content("""
+                        {
+                          "name": "Till i collapse",
+                          "releaseDate": "2024-03-15T13:55:21.850Z",
+                          "duration": 0,
+                          "language": "ENGLISH"
+                        }
+                        """.trim())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+        // when
 
+        // then
+
+    }
 
 }
