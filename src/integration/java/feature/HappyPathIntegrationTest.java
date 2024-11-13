@@ -134,15 +134,26 @@ class HappyPathIntegrationTest {
     @Test
     public void f4() throws Exception {
         mockMvc.perform(post("/genres")
-                .content("""
-                        {
-                            "name": "Rap"
-                        }
-                        """.trim())
-                .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "name": "Rap"
+                                }
+                                """.trim())
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.name", is("Rap")));
+    }
+
+    // 6. when I go to /songs/1 then I can see default genre with id and name default
+    @Test
+    public void f5() throws Exception {
+        mockMvc.perform(get("/songs/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id",is(2)))
-                .andExpect(jsonPath("$.name",is("Rap")));
+                .andExpect(jsonPath("$.song.genre.id",is(1)))
+                .andExpect(jsonPath("$.song.genre.name",is("default")));
     }
 }
