@@ -184,8 +184,27 @@ class HappyPathIntegrationTest {
     public void f8() throws Exception {
         mockMvc.perform(get("/albums")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                ).andExpect(status().isOk())
+                )
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.albums", empty()));
+    }
 
+    // 10. when I post to /albums with Album "EminemAlbum1" and Song with id 1 then Album "EminemAlbum1" is returned with id 1
+    @Test
+    public void f9() throws Exception {
+        mockMvc.perform(post("/albums")
+                        .content("""
+                                    {
+                                          "title": "EminemAlbum1",
+                                          "releaseDate": "2024-04-15T13:55:21.850Z",
+                                          "songIds": [1]
+                                        }
+                                """.trim())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("EminemAlbum1")))
+                .andExpect(jsonPath("$.songsIds", containsInAnyOrder(1)));
     }
 }
