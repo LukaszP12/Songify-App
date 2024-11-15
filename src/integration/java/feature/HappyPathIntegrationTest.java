@@ -221,12 +221,23 @@ class HappyPathIntegrationTest {
     @Test
     public void f11() throws Exception {
         mockMvc.perform(post("/artists")
-                .content(
-                        """
-                                "name": "Eminem",
-                        """
-                )).andExpect(status().isOk())
+                .content("""
+                         {
+                            "name": "Eminem",
+                         }  
+                         """.trim())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id",is(1L)))
                 .andExpect(jsonPath("$.name",is("Eminem")));
+    }
+    // 13. when I put to /artists/1/albums/1 then Artist with id 1 ("Eminem") is added to Album with id 1 ("EminemAlbum1")
+    @Test
+    public void f12() throws Exception {
+        mockMvc.perform(put("/artists/1/albums/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",is("probably assigned artist to album")));
     }
 }
