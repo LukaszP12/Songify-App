@@ -207,37 +207,51 @@ class HappyPathIntegrationTest {
                 .andExpect(jsonPath("$.name", is("EminemAlbum1")))
                 .andExpect(jsonPath("$.songsIds", containsInAnyOrder(1)));
     }
+
     // 11. when I go to /albums/1 then I can not see any albums because there is no artist in system
     @Test
     public void f10() throws Exception {
         mockMvc.perform(get("/albums/1")
-                .content(MediaType.APPLICATION_JSON_VALUE)
-        )
+                        .content(MediaType.APPLICATION_JSON_VALUE)
+                )
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message",is("Album with id: 1 not found")))
-                .andExpect(jsonPath("$.status",is("NOT_FOUND")));
+                .andExpect(jsonPath("$.message", is("Album with id: 1 not found")))
+                .andExpect(jsonPath("$.status", is("NOT_FOUND")));
     }
+
     // 12. when I post to /artists with Artist "Eminem" then Artist "Eminem" is returned with id 1
     @Test
     public void f11() throws Exception {
         mockMvc.perform(post("/artists")
-                .content("""
-                         {
-                            "name": "Eminem",
-                         }  
-                         """.trim())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-        ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.id",is(1L)))
-                .andExpect(jsonPath("$.name",is("Eminem")));
+                        .content("""
+                                {
+                                   "name": "Eminem",
+                                }  
+                                """.trim())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1L)))
+                .andExpect(jsonPath("$.name", is("Eminem")));
     }
+
     // 13. when I put to /artists/1/albums/1 then Artist with id 1 ("Eminem") is added to Album with id 1 ("EminemAlbum1")
     @Test
     public void f12() throws Exception {
         mockMvc.perform(put("/artists/1/albums/1")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-        )
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$",is("probably assigned artist to album")));
+                .andExpect(jsonPath("$", is("probably assigned artist to album")));
     }
+
+    // 14. when I go to /albums/1 then I can see album with single song with id 1 and single artist with id 1
+    @Test
+    public void f13() throws Exception {
+        mockMvc.perform(get("/albums/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.songs[*].id",containsInAnyOrder(1)))
+                .andExpect(jsonPath("$.artist[*]",containsInAnyOrder(1)));
+    }
+
 }
