@@ -251,7 +251,7 @@ class HappyPathIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.songs[*].id",containsInAnyOrder(1)))
-                .andExpect(jsonPath("$.artist[*]",containsInAnyOrder(1)));
+                .andExpect(jsonPath("$.artist[*].id",containsInAnyOrder(1)));
     }
 
 }
