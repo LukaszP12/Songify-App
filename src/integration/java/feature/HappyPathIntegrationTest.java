@@ -207,4 +207,14 @@ class HappyPathIntegrationTest {
                 .andExpect(jsonPath("$.name", is("EminemAlbum1")))
                 .andExpect(jsonPath("$.songsIds", containsInAnyOrder(1)));
     }
+    // 11. when I go to /albums/1 then I can not see any albums because there is no artist in system
+    @Test
+    public void f10() throws Exception {
+        mockMvc.perform(get("/albums/1")
+                .content(MediaType.APPLICATION_JSON_VALUE)
+        )
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message",is("Album with id: 1 not found")))
+                .andExpect(jsonPath("$.status",is("NOT_FOUND")));
+    }
 }
