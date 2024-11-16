@@ -253,5 +253,15 @@ class HappyPathIntegrationTest {
                 .andExpect(jsonPath("$.songs[*].id",containsInAnyOrder(1)))
                 .andExpect(jsonPath("$.artist[*].id",containsInAnyOrder(1)));
     }
+    // 15. when I put to /albums/1/songs/2 then Song with id 2 ("Lose Yourself") is added to Album with id 1 ("EminemAlbum1")
+    @Test
+    public void f14() throws Exception {
+        mockMvc.perform(put(("/albums/1/songs/2"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id",is(1)))
+                .andExpect(jsonPath("$.name",is("EminemAlbum1")))
+                .andExpect(jsonPath("$.songsIds[*]",containsInAnyOrder(1,2)));
+    }
 
 }
