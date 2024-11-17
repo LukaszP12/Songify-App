@@ -25,10 +25,15 @@ public class SongifyCrudFacade {
     private final SongUpdater songUpdater;
     private final SongDeleter songDeleter;
     private final SongAdder songAdder;
+    private final SongAssigner songAssigner;
     private final ArtistAdder artistAdder;
-    private final GenreAdder genreAdder;
     private final AlbumAdder albumAdder;
+    private final GenreAdder genreAdder;
+    private final GenreRetriever genreRetriever;
     private final ArtistRetriever artistRetriever;
+    private final ArtistDeleter artistDeleter;
+    private final ArtistAssigner artistAssigner;
+    private final ArtistUpdater artistUpdater;
     private final AlbumRepository albumRepository;
     private final AlbumRetriever albumRetriever;
 
@@ -41,21 +46,17 @@ public class SongifyCrudFacade {
     }
 
     public AlbumDto addAlbumWithSong(AlbumRequestDto dto) {
-        return albumAdder.addAlbum(dto.songId(), dto.title(), dto.releaseDate());
+        return albumAdder.addAlbum(dto.songIds(), dto.title(), dto.releaseDate());
     }
 
     public SongDto addSong(final @Valid SongRequestDto dto) {
         return songAdder.addSong(dto);
     }
 
-    public Set<ArtistDto> findAllArtists() {
-        return artistRetriever.findAllArtists();
-    }
-
     public Set<ArtistDto> findAllArtists(Pageable pageable) {
         return artistRetriever.findAllArtists(pageable)
                 .stream()
-                .map(artist -> new ArtistDto(artist.getId(), artist.getName()))
+                .map(artist -> new ArtistDto(artist.id(), artist.name()))
                 .collect(Collectors.toSet());
     }
 
@@ -121,5 +122,17 @@ public class SongifyCrudFacade {
     }
 
     public void assignGenreToSong(Long genreId, Long songId) {
+    }
+
+    public void deleteArtistByIdWithAlbumsAndSongs(Long artistId) {
+        artistDeleter.deleteArtistByIdWithAlbumsAndSongs(artistId);
+    }
+
+    public Set<AlbumDto> findAlbumsByArtistId(Long artistId) {
+        return albumRetriever.findAlbumsDtoByArtistId(artistId);
+    }
+
+    public AlbumDto findAlbumById(Long albumId) {
+        return albumRetriever.findDtoById(albumId);
     }
 }

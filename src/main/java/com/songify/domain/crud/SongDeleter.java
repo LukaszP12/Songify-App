@@ -5,6 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Service
 @Log4j2
 @Transactional
@@ -19,4 +21,9 @@ class SongDeleter {
         log.info("deleting song by id: " + id);
         songRepository.deleteById(id);
     }
+
+    void deleteAllSongsByIdIn(final Set<Long> songsIds) {
+        songRepository.deleteByIdIn(songsIds);
+    }
+
 }
