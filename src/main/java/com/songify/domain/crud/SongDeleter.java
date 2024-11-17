@@ -9,12 +9,12 @@ import java.util.Set;
 
 @Service
 @Log4j2
-@Transactional
 @AllArgsConstructor(access = lombok.AccessLevel.PACKAGE)
 class SongDeleter {
 
     private final SongRepository songRepository;
     private final SongRetriever songRetriever;
+    private final GenreDeleter genreDeleter;
 
     void deleteById(Long id) {
         songRetriever.existsById(id);
