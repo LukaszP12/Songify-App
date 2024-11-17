@@ -37,8 +37,14 @@ class AlbumRetriever {
                 .collect(Collectors.toSet());
     }
 
-    private Set<Album> findAlbumsByArtistId(final Long artistId) {
+    Set<Album> findAlbumsByArtistId(final Long artistId) {
         return albumRepository.findAllAlbumsByArtistId(artistId);
+    }
+
+    public long countArtistsByAlbumId(final Long albumId) {
+        return findById(albumId)
+                .getArtists()
+                .size();
     }
 
 //        Set<Artist> artists = album.getArtists();
