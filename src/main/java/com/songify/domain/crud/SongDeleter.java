@@ -26,4 +26,11 @@ class SongDeleter {
         songRepository.deleteByIdIn(songsIds);
     }
 
+    void deleteSongAndGenreById(final Long songId) {
+        Song song = songRetriever.findSongById(songId);
+        Long genreId = song.getGenre().getId();
+
+        deleteById(songId);
+        genreDeleter.deleteById(genreId);
+    }
 }
