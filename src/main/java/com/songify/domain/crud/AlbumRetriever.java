@@ -14,9 +14,21 @@ class AlbumRetriever {
 
     private final AlbumRepository albumRepository;
 
-    public AlbumInfo findAlbumByIdWithArtistsAndSongs(final Long id) {
-        return albumRepository.findById(id)
-                .orElseThrow(() -> new AlbumNotFoundException("Album with id: " + id + " not found "));
+    public AlbumDto findDtoById(final Long albumId){
+        return albumRepository.findAlbumById(albumId)
+                .orElseThrow(() -> new AlbumNotFoundException("Album with id: " + albumId + " not found "));
+    }
+
+    Album findById(final Long  albumId){
+        return albumRepository.findById(albumId)
+                .orElseThrow(
+                        () -> new AlbumNotFoundException("Album with id: " + albumId + " not found")
+                );
+    }
+
+    AlbumInfo findAlbumByIdWithArtistsAndSongs(final Long id) {
+        return albumRepository.findAlbumByIdWithSongsAndArtists(id)
+                .orElseThrow(() -> new AlbumNotFoundException("Album with id: " + id + " not found"));
     }
 
     Set<AlbumDto> findAlbumsDtoByArtistId(final Long artistId){
