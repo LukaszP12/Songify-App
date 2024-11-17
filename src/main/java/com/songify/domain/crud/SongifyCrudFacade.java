@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -134,5 +135,17 @@ public class SongifyCrudFacade {
 
     public AlbumDto findAlbumById(Long albumId) {
         return albumRetriever.findDtoById(albumId);
+    }
+
+    public void addArtistToAlbum(Long artistId, Long albumId) {
+        artistAssigner.addArtistToAlbum(artistId,albumId);
+    }
+
+    long countArtistsByAlbumId(final Long albumId){
+        return albumRetriever.countArtistsByAlbumId(albumId);
+    }
+
+    public Collection<Object> findAllAlbums() {
+        return albumRetriever.findAll();
     }
 }

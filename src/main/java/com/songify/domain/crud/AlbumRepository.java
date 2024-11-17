@@ -1,6 +1,7 @@
 package com.songify.domain.crud;
 
 
+import com.songify.domain.crud.song.dto.AlbumDto;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
@@ -28,7 +29,7 @@ public interface AlbumRepository extends Repository<Album, Long> {
     Set<Album> findAllAlbumsByArtistId(@Param("id") Long id);
 
     @Query("select a from Album a where a.id = :id")
-    Optional<AlbumInfo> findById(@Param("id") Long id);
+    Optional<Album> findById(@Param("id") Long id);
 
     @Query("""
             select a from Album a
@@ -38,4 +39,7 @@ public interface AlbumRepository extends Repository<Album, Long> {
             """)
     Optional<AlbumInfo> findAlbumByIdWithSongsAndArtists(Long id);
 
+    Optional<AlbumDto> findAlbumById(Long albumId);
+
+    Set<Album> findAll();
 }

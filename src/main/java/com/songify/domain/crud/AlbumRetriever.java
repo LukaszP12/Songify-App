@@ -4,6 +4,7 @@ import com.songify.domain.crud.song.dto.AlbumDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,19 @@ class AlbumRetriever {
 
     private Set<Album> findAlbumsByArtistId(final Long artistId) {
         return albumRepository.findAllAlbumsByArtistId(artistId);
+    }
+
+    public long countArtistsByAlbumId(final Long albumId) {
+        return findById(albumId)
+                .getArtists()
+                .size();
+    }
+
+    public Collection<Object> findAll() {
+        return albumRepository.findAll()
+                .stream()
+                .map(album -> new AlbumDto(album.getId(),album.getTitle(),album.getSongsIds()))
+                .collect(Collectors.toSet());
     }
 
 //        Set<Artist> artists = album.getArtists();
