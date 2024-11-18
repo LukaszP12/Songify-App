@@ -1,13 +1,13 @@
 package com.songify.domain.crud;
 
-import com.songify.domain.crud.song.dto.AlbumDto;
-import com.songify.domain.crud.song.dto.AlbumRequestDto;
-import com.songify.domain.crud.song.dto.ArtistDto;
-import com.songify.domain.crud.song.dto.ArtistRequestDto;
-import com.songify.domain.crud.song.dto.GenreDto;
-import com.songify.domain.crud.song.dto.GenreRequestDto;
-import com.songify.domain.crud.song.dto.SongDto;
-import com.songify.domain.crud.song.dto.SongRequestDto;
+import com.songify.domain.crud.dto.AlbumDto;
+import com.songify.domain.crud.dto.AlbumRequestDto;
+import com.songify.domain.crud.dto.ArtistDto;
+import com.songify.domain.crud.dto.ArtistRequestDto;
+import com.songify.domain.crud.dto.GenreDto;
+import com.songify.domain.crud.dto.GenreRequestDto;
+import com.songify.domain.crud.dto.SongDto;
+import com.songify.domain.crud.dto.SongRequestDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -79,10 +79,6 @@ public class SongifyCrudFacade {
 
     public SongDto findSongDtoById(Long id) {
         return songRetriever.findSongDtoById(id);
-    }
-
-    public List<Song> findByArtistEquals(String artist) {
-        return songRetriever.findByArtistEquals(artist);
     }
 
     public void deleteById(Long id) {
