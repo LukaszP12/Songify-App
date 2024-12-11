@@ -66,7 +66,6 @@ public class SongRestController {
     }
 
     @DeleteMapping("/{id}")
-    @RolesAllowed("ADMIN")
     public ResponseEntity<DeleteSongResponseDto> deleteSongByIdUsingPathVariable(@PathVariable Long id) {
         songFacade.deleteById(id);
         DeleteSongResponseDto body = SongControllerMapper.mapFromSongToDeleteSongResponseDto(id);
