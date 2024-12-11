@@ -57,6 +57,7 @@ class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/register/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/songs/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/message").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/artists/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/albums/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/genres/**").permitAll()
@@ -64,6 +65,14 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH, "/songs/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/songs/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/songs/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/artists/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/artists/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/artists/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/artists/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/albums/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/albums/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/genres/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/users/**").hasRole("ADMIN")
                 .anyRequest().authenticated());
         return http.build();
     }
