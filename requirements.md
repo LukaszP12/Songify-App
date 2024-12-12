@@ -32,7 +32,11 @@ SONGIFY: APLIKACJA DO ZARZĄDZANIA ALBUMAMI, ARTYSTAMI I PIOSENKAMI
 30. zeby zostac uzytkownikiem trzeba sie zarejstrowac login/haslo - wlasna implementacja i GOOGLE
 31. zapisujemy uzytkownikia i admina do bazy danych (w przypadku wlasnej implementacji)
 32. uzytkownik może wyświetlać piosenki, ale nie może zarządzać (w przyszlosc uzytkownik moze miec swoj profil, a tam "ulubione piosenki") - ROLE_USER
-33. 
+33. tylko admin moze zmieniac stan aplikacji (usuwac, dodawac, edytowac piosenki/albumy itp)
+34. chcemy miec szyfrowanie HTTPS, certyfikat wygenerowany recznie openssl
+35. chcemy obsluge CORS - zapytanie z domemy frontendowej
+36. chcemy zabezpieczenie CSRF bo bedzie frontend uzywany
+37. jako bonus potwierdzenie e-maila po rejestracji
 
 HAPPY PATH (user tworzy album "Eminema" z piosenkami "Til i collapse", "Lose yourself" o gatunku rap)
 
