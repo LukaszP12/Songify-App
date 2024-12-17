@@ -35,6 +35,6 @@ class JwtTokenGenerator {
                 .withExpiresAt(expiresAt)
                 .withIssuer(properties.issuer())
                 .withClaim("roles",securityUser.getAuthoritiesAsString())
-                .sign(Algorithm.HMAC256("lucas"));
+                .sign(Algorithm.HMAC256(properties.secret()));
     }
 }
