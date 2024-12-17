@@ -19,6 +19,8 @@ import java.time.ZoneOffset;
 @RequiredArgsConstructor
 class JwtTokenGenerator {
 
+    public static final String ROLES_CLAIM_NAME = "roles";
+
     private final AuthenticationManager authenticationManager;
     private final Clock clock = Clock.systemUTC();
     private final JwtConfigurationProperties properties;
@@ -34,7 +36,7 @@ class JwtTokenGenerator {
                 .withIssuedAt(issuedAt)
                 .withExpiresAt(expiresAt)
                 .withIssuer(properties.issuer())
-                .withClaim("roles",securityUser.getAuthoritiesAsString())
-                .sign(Algorithm.HMAC256("lucas"));
+                .withClaim(ROLES_CLAIM_NAME,securityUser.getAuthoritiesAsString())
+                .sign(Algorithm.HMAC256(properties.secret()));
     }
 }
