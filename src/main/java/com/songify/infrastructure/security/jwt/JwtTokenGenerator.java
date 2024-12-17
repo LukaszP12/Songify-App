@@ -31,12 +31,13 @@ class JwtTokenGenerator {
         SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
         Instant issuedAt = LocalDateTime.now(clock).toInstant(ZoneOffset.UTC);
         Instant expiresAt = issuedAt.plus(Duration.ofMinutes(properties.expirationMinutes()));
+        Algorithm algorithm = Algorithm.HMAC256(properties.secret());
         return JWT.create()
                 .withSubject(securityUser.getUsername())
                 .withIssuedAt(issuedAt)
                 .withExpiresAt(expiresAt)
                 .withIssuer(properties.issuer())
                 .withClaim(ROLES_CLAIM_NAME,securityUser.getAuthoritiesAsString())
-                .sign(Algorithm.HMAC256(properties.secret()));
+                .sign(algorithm);
     }
 }
