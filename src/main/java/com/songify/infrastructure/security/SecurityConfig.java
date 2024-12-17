@@ -4,8 +4,10 @@ import com.songify.domain.usercrud.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
@@ -24,6 +26,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Configuration
 class SecurityConfig {
@@ -46,23 +49,18 @@ class SecurityConfig {
 //    }
 
     @Bean
-    UserDetailsManager userDetailsService(UserRepository userRepository) {
-        return new UserDetailsServiceImpl(userRepository, passwordEncoder());
-    }
-
-    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(c -> c.disable());
         http.cors(corsConfigurerCustomizer());
         http.formLogin(c -> c.disable());
         http.httpBasic(c -> c.disable());
-        http.sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/swagger-resources/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/register/**").permitAll()
-                .requestMatchers(HttpMethod.POST,"/token").permitAll()
+                .requestMatchers(HttpMethod.POST, "/token").permitAll()
                 .requestMatchers(HttpMethod.GET, "/songs/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/message").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/artists/**").permitAll()
@@ -84,6 +82,16 @@ class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public UserDetailsManager userDetailsService(UserRepository userRepository) {
+        return new UserDetailsServiceImpl(userRepository, passwordEncoder());
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
     public Customizer<CorsConfigurer<HttpSecurity>> corsConfigurerCustomizer() {
         return c -> {
             CorsConfigurationSource source = request -> {
@@ -91,7 +99,7 @@ class SecurityConfig {
                 config.setAllowedOrigins(
                         List.of("http://localhost:3000"));
                 config.setAllowedMethods(
-                        List.of("GET", "POST", "PUT", "DELETE","PATCH"));
+                        List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
                 config.setAllowedHeaders(List.of("*"));
                 return config;
             };
