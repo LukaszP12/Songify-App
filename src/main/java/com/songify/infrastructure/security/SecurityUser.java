@@ -3,14 +3,14 @@ package com.songify.infrastructure.security;
 import com.songify.domain.usercrud.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-class SecurityUser implements UserDetails {
+public class SecurityUser implements UserDetails {
 
     private final User user;
 
@@ -22,6 +22,10 @@ class SecurityUser implements UserDetails {
                 .collect(Collectors.toList());
     }
 
+    public List<String> getAuthoritiesAsString() {
+        return user.getAuthorities().stream().toList();
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();
@@ -29,7 +33,7 @@ class SecurityUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getEmail();
     }
 
     @Override
@@ -49,6 +53,6 @@ class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return user.isEnabled();
     }
 }

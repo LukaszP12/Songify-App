@@ -24,6 +24,19 @@ SONGIFY: APLIKACJA DO ZARZĄDZANIA ALBUMAMI, ARTYSTAMI I PIOSENKAMI
 22. można wyświetlać konkretne gatunki muzyczne wraz z piosenkami
 23. można wyświetlać konkretnych artystów wraz z ich albumami
 24. chcemy mieć trwałe dane
+25. **25.Security:**
+26. Kazdy bez uwierzytelnienia (authentication) moze przegladac piosenki, albumy itp (gosc niezalogowany)
+27. Są 2 role: ROLE_USER i ROLE_ADMIN
+28. Uzywanie bezstanowego tokena JWT (uzyskuje go po zalogowaniu) - wlasna implementacja authorization i potem oauth google
+29. Tylko admin moze przejrzec loginy i role uzytkownikow endpoint /users
+30. zeby zostac uzytkownikiem trzeba sie zarejstrowac login/haslo - wlasna implementacja i GOOGLE
+31. zapisujemy uzytkownikia i admina do bazy danych (w przypadku wlasnej implementacji)
+32. uzytkownik może wyświetlać piosenki, ale nie może zarządzać (w przyszlosc uzytkownik moze miec swoj profil, a tam "ulubione piosenki") - ROLE_USER
+33. tylko admin moze zmieniac stan aplikacji (usuwac, dodawac, edytowac piosenki/albumy itp)
+34. chcemy miec szyfrowanie HTTPS, certyfikat wygenerowany recznie openssl
+35. chcemy obsluge CORS - zapytanie z domemy frontendowej
+36. chcemy zabezpieczenie CSRF bo bedzie frontend uzywany
+37. jako bonus potwierdzenie e-maila po rejestracji
 
 HAPPY PATH (user tworzy album "Eminema" z piosenkami "Til i collapse", "Lose yourself" o gatunku rap)
 
@@ -36,4 +49,4 @@ given there is no songs, artists, albums and genres created before
 5. when I post to /genre with Genre "Rap" then Genre "Rap" is returned with id 1
 6. when I go to /song/1 then I can see default genre
 7. when I put to /song/1/genre/1 then Genre with id 1 ("Rap") is added to Song with id 1 ("Til i collapse")
-8. 
+8.
