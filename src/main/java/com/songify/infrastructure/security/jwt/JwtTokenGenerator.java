@@ -1,6 +1,7 @@
 package com.songify.infrastructure.security.jwt;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.songify.infrastructure.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,6 +35,6 @@ class JwtTokenGenerator {
                 .withExpiresAt(expiresAt)
                 .withIssuer(properties.issuer())
                 .withClaim("roles",securityUser.getAuthoritiesAsString())
-                .sign(null);
+                .sign(Algorithm.HMAC256("lucas"));
     }
 }
