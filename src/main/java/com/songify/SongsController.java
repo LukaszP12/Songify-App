@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 @Log4j2
 public class SongsController {
 
-    public static Map<Integer, String> database;
-
-    static {
-        database = new HashMap<>();
-        database.put(1, "shawnmendes song1");
-        database.put(2, "ariana grande song2");
-    }
+    Map<Integer, String> database = new HashMap<>(
+            Map.of(
+                1,"shawnmendes song1",
+                2,"ariana grande song2",
+                3,"ariana grande song21123123",
+                4,"ariana grande song21123123cbvcbbcv"
+            ));
 
     @GetMapping("/songs")
     public ResponseEntity<SongResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
