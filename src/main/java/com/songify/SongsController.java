@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +21,10 @@ public class SongsController {
 
     Map<Integer, String> database = new HashMap<>(
             Map.of(
-                1,"shawnmendes song1",
-                2,"ariana grande song2",
-                3,"ariana grande song21123123",
-                4,"ariana grande song21123123cbvcbbcv"
+                    1, "shawnmendes song1",
+                    2, "ariana grande song2",
+                    3, "ariana grande song21123123",
+                    4, "ariana grande song21123123cbvcbbcv"
             ));
 
     @GetMapping("/songs")
@@ -53,5 +55,13 @@ public class SongsController {
         }
         SingleSongResponseDto response = new SingleSongResponseDto(song);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/songs")
+    public ResponseEntity<SingleSongResponseDto> postSong(@RequestBody SongRequestDto request) {
+        String songName = request.songName();
+        database.put(database.size()+1, songName);
+        SingleSongResponseDto singleSongResponseDto = new SingleSongResponseDto(songName);
+        return ResponseEntity.ok(singleSongResponseDto);
     }
 }
