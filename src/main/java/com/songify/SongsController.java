@@ -24,6 +24,9 @@ public class SongsController {
     @GetMapping("/songs/{id}")
     public ResponseEntity<SingleSongResponseDto> getSongById(@PathVariable Integer id) {
         String song = database.get(id);
+        if (song == null) {
+            return ResponseEntity.notFound().build();
+        }
         SingleSongResponseDto response = new SingleSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
