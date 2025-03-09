@@ -1,4 +1,4 @@
-package songify.song;
+package com.songify;
 
 public record SingleSongResponseDto(String song) {
 }
