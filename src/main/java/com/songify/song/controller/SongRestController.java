@@ -1,11 +1,13 @@
 package com.songify.song.controller;
 
+import com.songify.song.dto.request.PartiallyUpdateSongRequestDto;
+import com.songify.song.dto.request.SongRequestDto;
 import com.songify.song.dto.request.UpdateSongRequestDto;
+import com.songify.song.dto.response.PartiallyUpdateSongResponseDto;
+import com.songify.song.dto.response.SingleSongResponseDto;
+import com.songify.song.dto.response.SongResponseDto;
 import com.songify.song.dto.response.UpdateSongResponseDto;
 import com.songify.song.error.ErrorSongResponseDto;
-import com.songify.song.dto.response.SingleSongResponseDto;
-import com.songify.song.dto.request.SongRequestDto;
-import com.songify.song.dto.response.SongResponseDto;
 import com.songify.song.error.SongNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -101,5 +104,35 @@ public class SongRestController {
                 + " with new name: " + newSongName
                 + " and previously oldSong name: " + oldSong.name());
         return ResponseEntity.ok(new UpdateSongResponseDto(newSongName, request.artistName()));
+    }
+
+    @PatchMapping("/songs/{id}")
+    public ResponseEntity<PartiallyUpdateSongResponseDto> partiallyUpdateSong(
+            @PathVariable Integer id,
+            @RequestBody @Valid PartiallyUpdateSongRequestDto request) {
+
+        if (!database.containsKey(id)) {
+            throw new SongNotFoundException("Song with id " + id + " not found");
+        }
+        Song songFromDatabase = database.get(id);
+        Song.SongBuilder builder = Song.builder();
+        if (request.songName() != null) {
+            builder.name(request.songName());
+            log.info("partially updated song name");
+        } else {
+            builder.name(songFromDatabase.name());
+        }
+        if (request.artistName() != null) {
+            builder.artist(request.artistName());
+            log.info("partially updated artist name");
+        } else {
+            builder.artist(songFromDatabase.artist());
+        }
+        Song updatedSong = builder.build();
+        database.put(id, updatedSong);
+        log.info("Partially updated song with id: " + id +
+                " with oldSongName: " + songFromDatabase.name() + " to newSongName: " + updatedSong.name() +
+                " oldArtist: " + songFromDatabase.artist() + " to newArtist: " + updatedSong.artist());
+        return ResponseEntity.ok(new PartiallyUpdateSongResponseDto(updatedSong.name(), updatedSong.artist()));
     }
 }
