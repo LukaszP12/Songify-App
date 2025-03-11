@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
+@RequestMapping("/songs")
 public class SongRestController {
 
     Map<Integer, Song> database = new HashMap<>(
@@ -40,7 +42,7 @@ public class SongRestController {
                     4, new Song("ariana grande song21123123cbvcbbcv", "Ariana Grande")
             ));
 
-    @GetMapping("/songs")
+    @GetMapping
     public ResponseEntity<SongResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
         database.put(1, new Song("shawnmendes song1", "Shawn Mendes"));
         database.put(2, new Song("ariana grande song2", "Ariana Grande"));
@@ -58,7 +60,7 @@ public class SongRestController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/songs/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<SingleSongResponseDto> getSongById(@PathVariable Integer id,
                                                              @RequestHeader(required = false) String requestId) {
         log.info(requestId);
@@ -70,7 +72,7 @@ public class SongRestController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/songs")
+    @PostMapping
     public ResponseEntity<SingleSongResponseDto> postSong(@RequestBody @Valid SongRequestDto request) {
         String songName = request.songName();
         log.info("adding new song: " + songName);
@@ -80,7 +82,7 @@ public class SongRestController {
         return ResponseEntity.ok(singleSongResponseDto);
     }
 
-    @DeleteMapping("/songs/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ErrorSongResponseDto> deleteSongByIdUsingPathVariable(@PathVariable Integer id) {
         if (!database.containsKey(id)) {
             throw new SongNotFoundException("Song with id " + id + "not found");
@@ -90,7 +92,7 @@ public class SongRestController {
         return ResponseEntity.ok(new ErrorSongResponseDto("You deleted song with id: " + id, HttpStatus.OK));
     }
 
-    @PutMapping("/songs/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UpdateSongResponseDto> update(@PathVariable Integer id,
                                                         @RequestBody @Valid UpdateSongRequestDto request) {
         if (!database.containsKey(id)) {
@@ -106,7 +108,7 @@ public class SongRestController {
         return ResponseEntity.ok(new UpdateSongResponseDto(newSongName, request.artistName()));
     }
 
-    @PatchMapping("/songs/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<PartiallyUpdateSongResponseDto> partiallyUpdateSong(
             @PathVariable Integer id,
             @RequestBody @Valid PartiallyUpdateSongRequestDto request) {
