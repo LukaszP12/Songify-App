@@ -75,10 +75,13 @@ public class SongRestController {
 
     @PostMapping
     public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid SongRequestDto request) {
-        // mappowanie z DTO na obiekt domenowy (Song)
+        // 1. mappowanie z DTO na obiekt domenowy (Song)
         Song song = new Song(request.songName(), request.artistName());
+        // 2. Warstwa logiki biznesowej/serwisów domenowych: wyswietlamy informacje
         log.info("adding new song: " + song);
+        // 3. Warstwa bazodanowa: zapisujemy do bazy danych
         database.put(database.size() + 1, song);
+        // 4. mapowanie z obiektu domenowego (Song) na DTO CreateSongResponseDto
         return ResponseEntity.ok(new CreateSongResponseDto(song));
     }
 
