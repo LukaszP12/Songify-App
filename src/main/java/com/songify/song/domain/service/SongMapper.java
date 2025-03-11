@@ -13,6 +13,7 @@ import com.songify.song.infrastructure.controller.dto.response.UpdateSongRespons
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Map;
 
 public class SongMapper {
 
@@ -52,7 +53,7 @@ public class SongMapper {
         return new GetSongResponseDto(songDto);
     }
 
-    public static GetAllSongsResponseDto mapFromSongToGetAllSongsResponseDto(List<Song> songs) {
-        return new GetAllSongsResponseDto(songs);
+    public static GetAllSongsResponseDto mapFromSongToGetAllSongsResponseDto(Map<Integer, Song> songsMap) {
+        return new GetAllSongsResponseDto(songsMap);
     }
 }
