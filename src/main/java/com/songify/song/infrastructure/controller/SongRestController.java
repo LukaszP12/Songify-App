@@ -1,15 +1,17 @@
-package com.songify.song.controller;
+package com.songify.song.infrastructure.controller;
 
-import com.songify.song.dto.request.PartiallyUpdateSongRequestDto;
-import com.songify.song.dto.request.SongRequestDto;
-import com.songify.song.dto.request.UpdateSongRequestDto;
-import com.songify.song.dto.response.GetSongResponseDto;
-import com.songify.song.dto.response.PartiallyUpdateSongResponseDto;
-import com.songify.song.dto.response.CreateSongResponseDto;
-import com.songify.song.dto.response.GetAllSongsResponseDto;
-import com.songify.song.dto.response.UpdateSongResponseDto;
-import com.songify.song.error.ErrorSongResponseDto;
-import com.songify.song.error.SongNotFoundException;
+import com.songify.song.domain.service.SongMapper;
+import com.songify.song.infrastructure.controller.dto.request.PartiallyUpdateSongRequestDto;
+import com.songify.song.infrastructure.controller.dto.request.CreateSongRequestDto;
+import com.songify.song.infrastructure.controller.dto.request.UpdateSongRequestDto;
+import com.songify.song.infrastructure.controller.dto.response.GetSongResponseDto;
+import com.songify.song.infrastructure.controller.dto.response.PartiallyUpdateSongResponseDto;
+import com.songify.song.infrastructure.controller.dto.response.CreateSongResponseDto;
+import com.songify.song.infrastructure.controller.dto.response.GetAllSongsResponseDto;
+import com.songify.song.infrastructure.controller.dto.response.UpdateSongResponseDto;
+import com.songify.song.infrastructure.controller.error.ErrorSongResponseDto;
+import com.songify.song.domain.model.SongNotFoundException;
+import com.songify.song.domain.model.Song;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -26,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -43,6 +47,8 @@ public class SongRestController {
                     4, new Song("ariana grande song21123123cbvcbbcv", "Ariana Grande")
             ));
 
+    private SongMapper songMapper;
+
     @GetMapping
     public ResponseEntity<GetAllSongsResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
         database.put(1, new Song("shawnmendes song1", "Shawn Mendes"));
@@ -54,10 +60,11 @@ public class SongRestController {
                     .stream()
                     .limit(limit)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-            GetAllSongsResponseDto response = new GetAllSongsResponseDto(limitedMap);
+            List<Song> songs = limitedMap.values().stream().toList();
+            GetAllSongsResponseDto response = new GetAllSongsResponseDto(songs);
             return ResponseEntity.ok(response);
         }
-        GetAllSongsResponseDto response = new GetAllSongsResponseDto(database);
+        GetAllSongsResponseDto response = new GetAllSongsResponseDto(database.values().stream().toList());
         return ResponseEntity.ok(response);
     }
 
@@ -74,15 +81,16 @@ public class SongRestController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid SongRequestDto request) {
+    public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid CreateSongRequestDto request) {
         // 1. mappowanie z DTO na obiekt domenowy (Song)
-        Song song = new Song(request.songName(), request.artistName());
+        Song song = songMapper.mapFromCreateSongRequestDtoToSong(request);
         // 2. Warstwa logiki biznesowej/serwisów domenowych: wyswietlamy informacje
         log.info("adding new song: " + song);
         // 3. Warstwa bazodanowa: zapisujemy do bazy danych
         database.put(database.size() + 1, song);
         // 4. mapowanie z obiektu domenowego (Song) na DTO CreateSongResponseDto
-        return ResponseEntity.ok(new CreateSongResponseDto(song));
+        CreateSongResponseDto body = songMapper.mapFromSongToCreateSongResponseDto(song);
+        return ResponseEntity.ok(body);
     }
 
     @DeleteMapping("/{id}")
