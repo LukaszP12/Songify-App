@@ -6,7 +6,7 @@ import com.songify.song.dto.request.UpdateSongRequestDto;
 import com.songify.song.dto.response.GetSongResponseDto;
 import com.songify.song.dto.response.PartiallyUpdateSongResponseDto;
 import com.songify.song.dto.response.CreateSongResponseDto;
-import com.songify.song.dto.response.SongResponseDto;
+import com.songify.song.dto.response.GetAllSongsResponseDto;
 import com.songify.song.dto.response.UpdateSongResponseDto;
 import com.songify.song.error.ErrorSongResponseDto;
 import com.songify.song.error.SongNotFoundException;
@@ -44,7 +44,7 @@ public class SongRestController {
             ));
 
     @GetMapping
-    public ResponseEntity<SongResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
+    public ResponseEntity<GetAllSongsResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
         database.put(1, new Song("shawnmendes song1", "Shawn Mendes"));
         database.put(2, new Song("ariana grande song2", "Ariana Grande"));
         database.put(3, new Song("ariana grande song21123123", "Ariana Grande"));
@@ -54,10 +54,10 @@ public class SongRestController {
                     .stream()
                     .limit(limit)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-            SongResponseDto response = new SongResponseDto(limitedMap);
+            GetAllSongsResponseDto response = new GetAllSongsResponseDto(limitedMap);
             return ResponseEntity.ok(response);
         }
-        SongResponseDto response = new SongResponseDto(database);
+        GetAllSongsResponseDto response = new GetAllSongsResponseDto(database);
         return ResponseEntity.ok(response);
     }
 
