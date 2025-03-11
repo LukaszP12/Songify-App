@@ -63,7 +63,7 @@ public class SongRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<GetSongResponseDto> getSongById(@PathVariable Integer id,
-                                                             @RequestHeader(required = false) String requestId) {
+                                                          @RequestHeader(required = false) String requestId) {
         log.info(requestId);
         if (!database.containsKey(id)) {
             throw new SongNotFoundException("Song with id " + id + " not found");
@@ -75,9 +75,9 @@ public class SongRestController {
 
     @PostMapping
     public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid SongRequestDto request) {
-        String songName = request.songName();
-        log.info("adding new song: " + songName);
-        Song song = new Song(songName, request.artistName());
+        // mappowanie z DTO na obiekt domenowy (Song)
+        Song song = new Song(request.songName(), request.artistName());
+        log.info("adding new song: " + song);
         database.put(database.size() + 1, song);
         return ResponseEntity.ok(new CreateSongResponseDto(song));
     }
