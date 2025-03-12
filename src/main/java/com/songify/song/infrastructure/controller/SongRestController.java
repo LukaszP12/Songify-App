@@ -33,18 +33,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
 @Log4j2
 @RequestMapping("/songs")
 @RequiredArgsConstructor
 public class SongRestController {
 
-    private SongMapper songMapper;
-
     private final SongAdder songAdder;
     private final SongRetriever songRetriever;
 
-    @GetMapping
+    @GetMapping(params = "myParam=myValue")
     public ResponseEntity<GetAllSongsResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
         Map<Integer, Song> allSongs = songRetriever.findAll();
         if (limit != null) {
@@ -69,11 +69,11 @@ public class SongRestController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid CreateSongRequestDto request) {
-        Song song = songMapper.mapFromCreateSongRequestDtoToSong(request);
+        Song song = SongMapper.mapFromCreateSongRequestDtoToSong(request);
         songAdder.addSong(song);
-        CreateSongResponseDto body = songMapper.mapFromSongToCreateSongResponseDto(song);
+        CreateSongResponseDto body = SongMapper.mapFromSongToCreateSongResponseDto(song);
         return ResponseEntity.ok(body);
     }
 
