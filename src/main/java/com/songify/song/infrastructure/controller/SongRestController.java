@@ -31,10 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
@@ -68,7 +65,7 @@ public class SongRestController {
             throw new SongNotFoundException("Song with id " + id + " not found");
         }
         Song song = allSongs.get(id);
-        GetSongResponseDto response = new GetSongResponseDto(song);
+        GetSongResponseDto response = SongMapper.mapFromSongToGetSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
 
