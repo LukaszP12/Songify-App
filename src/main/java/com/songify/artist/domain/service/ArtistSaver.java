@@ -3,11 +3,12 @@ package com.songify.artist.domain.service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.List;
 import java.util.UUID;
 
-@RequestScope
+@SessionScope
 @Component
 @Log4j2
 public class ArtistSaver {
