@@ -46,8 +46,10 @@ public class SongRestController {
     private final SongRetriever songRetriever;
     private final ArtistSaver artistSaver;
 
-    @GetMapping(params = "myParam=myValue")
+    //    @GetMapping(params = "myParam=myValue")
+    @GetMapping
     public ResponseEntity<GetAllSongsResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
+//        throw new RuntimeException();
         Map<Integer, Song> allSongs = songRetriever.findAll();
         if (limit != null) {
             Map<Integer, Song> limitedMap = songRetriever.findAllLimitedBy(limit);
@@ -61,8 +63,8 @@ public class SongRestController {
     @GetMapping("/{id}")
     public ResponseEntity<GetSongResponseDto> getSongById(@PathVariable Integer id,
                                                           @RequestHeader(required = false) String requestId) {
-        Map<Integer, Song> allSongs = songRetriever.findAll();
         log.info(requestId);
+        Map<Integer, Song> allSongs = songRetriever.findAll();
         if (!allSongs.containsKey(id)) {
             throw new SongNotFoundException("Song with id " + id + " not found");
         }
