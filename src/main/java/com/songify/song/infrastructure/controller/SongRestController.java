@@ -69,7 +69,7 @@ public class SongRestController {
         log.info(requestId);
         Optional<Song> songById = songRetriever.findSongById(id);
 
-        if (!songById.isPresent()) {
+        if (songById.isEmpty()) {
             throw new SongNotFoundException("Song with id " + id + " not found");
         }
 
