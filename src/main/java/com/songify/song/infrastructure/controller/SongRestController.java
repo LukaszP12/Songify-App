@@ -1,5 +1,6 @@
 package com.songify.song.infrastructure.controller;
 
+import com.songify.artist.domain.service.ArtistSaver;
 import com.songify.song.domain.model.Song;
 import com.songify.song.domain.model.SongNotFoundException;
 import com.songify.song.domain.service.SongAdder;
@@ -43,6 +44,7 @@ public class SongRestController {
 
     private final SongAdder songAdder;
     private final SongRetriever songRetriever;
+    private final ArtistSaver artistSaver;
 
     @GetMapping(params = "myParam=myValue")
     public ResponseEntity<GetAllSongsResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
@@ -72,6 +74,12 @@ public class SongRestController {
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid CreateSongRequestDto request) {
         Song song = SongMapper.mapFromCreateSongRequestDtoToSong(request);
+
+        artistSaver.printArtistsSize();
+        artistSaver.printSaverName();
+        artistSaver.addArtist(song.artist());
+        artistSaver.printArtistsSize();
+
         songAdder.addSong(song);
         CreateSongResponseDto body = SongMapper.mapFromSongToCreateSongResponseDto(song);
         return ResponseEntity.ok(body);
