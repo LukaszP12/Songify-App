@@ -3,6 +3,7 @@ package com.songify.song.infrastructure.controller;
 import com.songify.artist.domain.service.ArtistSaver;
 import com.songify.song.domain.entities.Song;
 import com.songify.song.domain.model.SongNotFoundException;
+import com.songify.song.domain.repository.SongRepository;
 import com.songify.song.domain.service.SongAdder;
 import com.songify.song.domain.service.SongMapper;
 import com.songify.song.domain.service.SongRetriever;
@@ -41,6 +42,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/songs")
 @RequiredArgsConstructor
 public class SongRestController {
+    private final SongRepository songRepository;
 
     private final SongAdder songAdder;
     private final SongRetriever songRetriever;
@@ -61,14 +63,24 @@ public class SongRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GetSongResponseDto> getSongById(@PathVariable Integer id,
+    public ResponseEntity<GetSongResponseDto> getSongById(@PathVariable Long id,
                                                           @RequestHeader(required = false) String requestId) {
         log.info(requestId);
         List<Song> allSongs = songRetriever.findAll();
-        if (!allSongs.contains(id)) {
+
+        boolean present = allSongs.stream()
+                .filter(song -> song.getId().equals(id))
+                .findFirst()
+                .isPresent();
+
+        if (!present) {
             throw new SongNotFoundException("Song with id " + id + " not found");
         }
-        Song song = allSongs.get(id);
+
+        Song song = allSongs
+                .stream()
+                .filter(song1 -> song1.getId().equals(id))
+                .findFirst().get();
         GetSongResponseDto response = SongMapper.mapFromSongToGetSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
