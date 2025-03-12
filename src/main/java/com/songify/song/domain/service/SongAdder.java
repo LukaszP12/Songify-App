@@ -1,6 +1,6 @@
 package com.songify.song.domain.service;
 
-import com.songify.song.domain.model.Song;
+import com.songify.song.domain.entities.Song;
 import com.songify.song.domain.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +16,7 @@ public class SongAdder {
     public Song addSong(Song song) {
         log.info("adding new song: " + song);
         // zapytanie do serwisu songs.com/validate?songName=song
-        songRepository.saveToDatabase(song);
+        songRepository.save(song);
         return song;
     }
 }
