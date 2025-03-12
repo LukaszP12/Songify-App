@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -66,10 +67,10 @@ public class SongRestController {
     public ResponseEntity<GetSongResponseDto> getSongById(@PathVariable Long id,
                                                           @RequestHeader(required = false) String requestId) {
         log.info(requestId);
-        List<Song> allSongs = songRetriever.findAll();
+        Optional<Song> songById = songRetriever.findSongById(id);
 
-        boolean isIdPresent = allSongs.stream()
-                .filter(song -> song.getId().equals(id))
+        boolean isIdPresent = songById
+                .stream()
                 .findFirst()
                 .isPresent();
 
@@ -77,10 +78,7 @@ public class SongRestController {
             throw new SongNotFoundException("Song with id " + id + " not found");
         }
 
-        Song song = allSongs
-                .stream()
-                .filter(song1 -> song1.getId().equals(id))
-                .findFirst().get();
+        Song song = songById.get();
         GetSongResponseDto response = SongMapper.mapFromSongToGetSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
