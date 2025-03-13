@@ -8,6 +8,7 @@ import com.songify.song.domain.service.SongAdder;
 import com.songify.song.domain.service.SongDeleter;
 import com.songify.song.domain.service.SongMapper;
 import com.songify.song.domain.service.SongRetriever;
+import com.songify.song.domain.service.SongUpdater;
 import com.songify.song.infrastructure.controller.dto.request.CreateSongRequestDto;
 import com.songify.song.infrastructure.controller.dto.request.PartiallyUpdateSongRequestDto;
 import com.songify.song.infrastructure.controller.dto.request.UpdateSongRequestDto;
@@ -48,6 +49,7 @@ public class SongRestController {
     private final SongAdder songAdder;
     private final SongRetriever songRetriever;
     private final SongDeleter songDeleter;
+    private final SongUpdater songUpdater;
     private final ArtistSaver artistSaver;
 
     //    @GetMapping(params = "myParam=myValue")
@@ -105,17 +107,18 @@ public class SongRestController {
     @PutMapping("/{id}")
     public ResponseEntity<UpdateSongResponseDto> update(@PathVariable Long id,
                                                         @RequestBody @Valid UpdateSongRequestDto request) {
+        songRetriever.existsById(id);
         Optional<Song> songById = songRetriever.findSongById(id);
-        if (songById.isEmpty()) {
-            throw new SongNotFoundException("Song with id " + id + "not found");
-        }
         Song oldSong = songById.get();
+
         Song newSong = SongMapper.mapFromUpdateSongRequestDtoToSongDto(request);
-        songAdder.addSong(newSong);
+        songUpdater.updateById(id, newSong);
+
         log.info("Updated song with id: " + id
                 + " with new name: " + newSong
                 + " and previously oldSong name: " + oldSong.getName());
-        return ResponseEntity.ok(new UpdateSongResponseDto(newSong.getName(), newSong.getArtist()));
+        UpdateSongResponseDto body = SongMapper.mapFromSongToUpdateSongResponseDto(newSong);
+        return ResponseEntity.ok(body);
     }
 
     @PatchMapping("/{id}")
