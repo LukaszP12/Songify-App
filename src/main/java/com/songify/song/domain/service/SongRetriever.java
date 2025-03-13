@@ -8,7 +8,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -31,12 +30,14 @@ public class SongRetriever {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Song> findSongById(Long id) {
-        return songRepository.findById(id);
+    public Song findSongById(Long id) {
+        return songRepository.findById(id)
+                .orElseThrow(() -> new SongNotFoundException("" + id));
     }
 
     public void existsById(Long id) {
-        findSongById(id)
-                .orElseThrow(() -> new SongNotFoundException("" + id));
+        if (!songRepository.existsById(id)) {
+            throw new SongNotFoundException("" + id);
+        }
     }
 }

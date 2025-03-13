@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -70,13 +69,7 @@ public class SongRestController {
     public ResponseEntity<GetSongResponseDto> getSongById(@PathVariable Long id,
                                                           @RequestHeader(required = false) String requestId) {
         log.info(requestId);
-        Optional<Song> songById = songRetriever.findSongById(id);
-
-        if (songById.isEmpty()) {
-            throw new SongNotFoundException("Song with id " + id + " not found");
-        }
-
-        Song song = songById.get();
+        Song song = songRetriever.findSongById(id);
         GetSongResponseDto response = SongMapper.mapFromSongToGetSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
@@ -97,7 +90,6 @@ public class SongRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteSongResponseDto> deleteSongByIdUsingPathVariable(@PathVariable Long id) {
-        songRetriever.existsById(id);
         songDeleter.deleteSongById(id);
         log.info("You deleted song with id: " + id);
         DeleteSongResponseDto body = SongMapper.mapFromSongToDeleteSongResponseDto(id);
@@ -107,9 +99,7 @@ public class SongRestController {
     @PutMapping("/{id}")
     public ResponseEntity<UpdateSongResponseDto> update(@PathVariable Long id,
                                                         @RequestBody @Valid UpdateSongRequestDto request) {
-        songRetriever.existsById(id);
-        Optional<Song> songById = songRetriever.findSongById(id);
-        Song oldSong = songById.get();
+        Song oldSong = songRetriever.findSongById(id);
 
         Song newSong = SongMapper.mapFromUpdateSongRequestDtoToSongDto(request);
         songUpdater.updateById(id, newSong);

@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class SongUpdater {
 
     private final SongRepository songRepository;
+    private final SongRetriever songRetriever;
 
     public void updateById(Long id, Song newSong) {
+        songRetriever.existsById(id);
         songRepository.updateById(id, newSong);
     }
 }
