@@ -2,7 +2,6 @@ package com.songify.song.infrastructure.controller;
 
 import com.songify.artist.domain.service.ArtistSaver;
 import com.songify.song.domain.entities.Song;
-import com.songify.song.domain.model.SongNotFoundException;
 import com.songify.song.domain.repository.SongRepository;
 import com.songify.song.domain.service.SongAdder;
 import com.songify.song.domain.service.SongDeleter;
@@ -31,8 +30,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -51,16 +50,9 @@ public class SongRestController {
     private final SongUpdater songUpdater;
     private final ArtistSaver artistSaver;
 
-    //    @GetMapping(params = "myParam=myValue")
     @GetMapping
-    public ResponseEntity<GetAllSongsResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
-//        throw new RuntimeException();
-        List<Song> allSongs = songRetriever.findAll();
-        if (limit != null) {
-            List<Song> allLimitedBy = songRetriever.findAllLimitedBy(limit);
-            GetAllSongsResponseDto response = new GetAllSongsResponseDto(allLimitedBy);
-            return ResponseEntity.ok(response);
-        }
+    public ResponseEntity<GetAllSongsResponseDto> getAllSongs(Pageable pageable) {
+        List<Song> allSongs = songRetriever.findAll(pageable);
         GetAllSongsResponseDto response = SongMapper.mapFromSongToGetAllSongsResponseDto(allSongs);
         return ResponseEntity.ok(response);
     }
