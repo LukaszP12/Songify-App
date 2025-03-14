@@ -5,7 +5,6 @@ import com.songify.song.domain.entities.Song;
 import com.songify.song.domain.repository.SongRepository;
 import com.songify.song.domain.service.SongAdder;
 import com.songify.song.domain.service.SongDeleter;
-import com.songify.song.domain.service.SongMapper;
 import com.songify.song.domain.service.SongRetriever;
 import com.songify.song.domain.service.SongUpdater;
 import com.songify.song.infrastructure.controller.dto.request.CreateSongRequestDto;
@@ -16,11 +15,11 @@ import com.songify.song.infrastructure.controller.dto.response.DeleteSongRespons
 import com.songify.song.infrastructure.controller.dto.response.GetAllSongsResponseDto;
 import com.songify.song.infrastructure.controller.dto.response.GetSongResponseDto;
 import com.songify.song.infrastructure.controller.dto.response.PartiallyUpdateSongResponseDto;
-import com.songify.song.infrastructure.controller.dto.response.SongDto;
 import com.songify.song.infrastructure.controller.dto.response.UpdateSongResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,10 +33,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.songify.song.domain.service.SongMapper.mapFromCreateSongRequestDtoToSong;
 import static com.songify.song.domain.service.SongMapper.mapFromPartiallyUpdateSongRequestDtoToSong;
