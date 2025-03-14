@@ -9,12 +9,18 @@ import com.songify.song.infrastructure.controller.dto.response.DeleteSongRespons
 import com.songify.song.infrastructure.controller.dto.response.GetAllSongsResponseDto;
 import com.songify.song.infrastructure.controller.dto.response.GetSongResponseDto;
 import com.songify.song.infrastructure.controller.dto.response.PartiallyUpdateSongResponseDto;
+import com.songify.song.infrastructure.controller.dto.response.SongDto;
 import com.songify.song.infrastructure.controller.dto.response.UpdateSongResponseDto;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SongMapper {
+
+    public static SongDto mapFromSongToSongDto(Song song) {
+        return new SongDto(song.getId(), song.getName(), song.getArtist());
+    }
 
     public static Song mapFromCreateSongRequestDtoToSong(CreateSongRequestDto dto) {
         return new Song(dto.songName(), dto.artistName());
@@ -33,7 +39,8 @@ public class SongMapper {
     }
 
     public static CreateSongResponseDto mapFromSongToCreateSongResponseDto(Song song) {
-        return new CreateSongResponseDto(song);
+        SongDto savedSongDto = SongMapper.mapFromSongToSongDto(song);
+        return new CreateSongResponseDto(savedSongDto);
     }
 
     public static DeleteSongResponseDto mapFromSongToDeleteSongResponseDto(Long id) {
@@ -41,23 +48,28 @@ public class SongMapper {
     }
 
     public static UpdateSongResponseDto mapFromSongToUpdateSongResponseDto(Song newSong) {
-        return new UpdateSongResponseDto(newSong.getName(), newSong.getArtist());
+        return new UpdateSongResponseDto(new SongDto(newSong.getId(), newSong.getName(), newSong.getArtist()));
     }
 
     public static PartiallyUpdateSongResponseDto mapFromSongToPartiallyUpdateSongResponseDto(Song savedSong) {
-        return new PartiallyUpdateSongResponseDto(savedSong.getName(), savedSong.getArtist());
+        return new PartiallyUpdateSongResponseDto(new SongDto(savedSong.getId(),savedSong.getName(),savedSong.getArtist()));
     }
 
-    public static PartiallyUpdateSongResponseDto mapFromSongDtoToPartiallyUpdateSongResponseDto(Song songDto) {
-        return new PartiallyUpdateSongResponseDto(songDto.getName(), songDto.getArtist());
+    public static PartiallyUpdateSongResponseDto mapFromSongDtoToPartiallyUpdateSongResponseDto(Song song) {
+        SongDto songDto = SongMapper.mapFromSongToSongDto(song);
+        return new PartiallyUpdateSongResponseDto(songDto);
     }
 
-    public static GetSongResponseDto mapFromSongToGetSongResponseDto(Song songDto) {
+    public static GetSongResponseDto mapFromSongToGetSongResponseDto(Song song) {
+        SongDto songDto = mapFromSongToSongDto(song);
         return new GetSongResponseDto(songDto);
     }
 
     public static GetAllSongsResponseDto mapFromSongToGetAllSongsResponseDto(List<Song> songs) {
-        return new GetAllSongsResponseDto(songs);
+        List<SongDto> songDtos = songs.stream()
+                .map(SongMapper::mapFromSongToSongDto)
+                .collect(Collectors.toList());
+        return new GetAllSongsResponseDto(songDtos);
     }
 
 }

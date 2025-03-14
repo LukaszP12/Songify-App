@@ -16,6 +16,7 @@ import com.songify.song.infrastructure.controller.dto.response.DeleteSongRespons
 import com.songify.song.infrastructure.controller.dto.response.GetAllSongsResponseDto;
 import com.songify.song.infrastructure.controller.dto.response.GetSongResponseDto;
 import com.songify.song.infrastructure.controller.dto.response.PartiallyUpdateSongResponseDto;
+import com.songify.song.infrastructure.controller.dto.response.SongDto;
 import com.songify.song.infrastructure.controller.dto.response.UpdateSongResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.songify.song.domain.service.SongMapper.mapFromCreateSongRequestDtoToSong;
+import static com.songify.song.domain.service.SongMapper.mapFromPartiallyUpdateSongRequestDtoToSong;
+import static com.songify.song.domain.service.SongMapper.mapFromSongToCreateSongResponseDto;
+import static com.songify.song.domain.service.SongMapper.mapFromSongToDeleteSongResponseDto;
+import static com.songify.song.domain.service.SongMapper.mapFromSongToGetAllSongsResponseDto;
+import static com.songify.song.domain.service.SongMapper.mapFromSongToGetSongResponseDto;
+import static com.songify.song.domain.service.SongMapper.mapFromSongToPartiallyUpdateSongResponseDto;
+import static com.songify.song.domain.service.SongMapper.mapFromSongToUpdateSongResponseDto;
+import static com.songify.song.domain.service.SongMapper.mapFromUpdateSongRequestDtoToSongDto;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -55,7 +66,7 @@ public class SongRestController {
     @GetMapping
     public ResponseEntity<GetAllSongsResponseDto> getAllSongs(@PageableDefault(page = 0, size = 10) @RequestParam(required = false) Pageable pageable) {
         List<Song> allSongs = songRetriever.findAll(pageable);
-        GetAllSongsResponseDto response = SongMapper.mapFromSongToGetAllSongsResponseDto(allSongs);
+        GetAllSongsResponseDto response = mapFromSongToGetAllSongsResponseDto(allSongs);
         return ResponseEntity.ok(response);
     }
 
@@ -64,21 +75,21 @@ public class SongRestController {
                                                           @RequestHeader(required = false) String requestId) {
         log.info(requestId);
         Song song = songRetriever.findSongById(id);
-        GetSongResponseDto response = SongMapper.mapFromSongToGetSongResponseDto(song);
+        GetSongResponseDto response = mapFromSongToGetSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid CreateSongRequestDto request) {
-        Song song = SongMapper.mapFromCreateSongRequestDtoToSong(request);
+        Song song = mapFromCreateSongRequestDtoToSong(request);
 
         artistSaver.printArtistsSize();
         artistSaver.printSaverName();
         artistSaver.addArtist(song.getArtist());
         artistSaver.printArtistsSize();
 
-        songAdder.addSong(song);
-        CreateSongResponseDto body = SongMapper.mapFromSongToCreateSongResponseDto(song);
+        Song savedSong = songAdder.addSong(song);
+        CreateSongResponseDto body = mapFromSongToCreateSongResponseDto(savedSong);
         return ResponseEntity.ok(body);
     }
 
@@ -86,7 +97,7 @@ public class SongRestController {
     public ResponseEntity<DeleteSongResponseDto> deleteSongByIdUsingPathVariable(@PathVariable Long id) {
         songDeleter.deleteSongById(id);
         log.info("You deleted song with id: " + id);
-        DeleteSongResponseDto body = SongMapper.mapFromSongToDeleteSongResponseDto(id);
+        DeleteSongResponseDto body = mapFromSongToDeleteSongResponseDto(id);
         return ResponseEntity.ok(body);
     }
 
@@ -95,13 +106,13 @@ public class SongRestController {
                                                         @RequestBody @Valid UpdateSongRequestDto request) {
         Song oldSong = songRetriever.findSongById(id);
 
-        Song newSong = SongMapper.mapFromUpdateSongRequestDtoToSongDto(request);
+        Song newSong = mapFromUpdateSongRequestDtoToSongDto(request);
         songUpdater.updateById(id, newSong);
 
         log.info("Updated song with id: " + id
                 + " with new name: " + newSong
                 + " and previously oldSong name: " + oldSong.getName());
-        UpdateSongResponseDto body = SongMapper.mapFromSongToUpdateSongResponseDto(newSong);
+        UpdateSongResponseDto body = mapFromSongToUpdateSongResponseDto(newSong);
         return ResponseEntity.ok(body);
     }
 
@@ -109,9 +120,9 @@ public class SongRestController {
     public ResponseEntity<PartiallyUpdateSongResponseDto> partiallyUpdateSong(
             @PathVariable Long id,
             @RequestBody @Valid PartiallyUpdateSongRequestDto request) {
-        Song updatedSong = SongMapper.mapFromPartiallyUpdateSongRequestDtoToSong(request);
+        Song updatedSong = mapFromPartiallyUpdateSongRequestDtoToSong(request);
         Song savedSong = songUpdater.updatePartiallyById(id, updatedSong);
-        PartiallyUpdateSongResponseDto body = SongMapper.mapFromSongToPartiallyUpdateSongResponseDto(savedSong);
+        PartiallyUpdateSongResponseDto body = mapFromSongToPartiallyUpdateSongResponseDto(savedSong);
         return ResponseEntity.ok(body);
     }
 }
