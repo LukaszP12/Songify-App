@@ -18,23 +18,18 @@ public class SongRetriever {
 
     private final SongRepository songRepository;
 
-    public List<Song> findAll() {
-        log.info("retrieving all songs: ");
-        return songRepository.findAll();
-    }
-
     public List<Song> findAll(Pageable pageable) {
         log.info("retrieving all songs: ");
         return songRepository.findAll(pageable);
     }
 
-    public List<Song> findAllLimitedBy(Integer limit) {
-        return songRepository
-                .findAll()
-                .stream()
-                .limit(limit)
-                .collect(Collectors.toList());
-    }
+//    public List<Song> findAllLimitedBy(Integer limit) {
+//        return songRepository
+//                .findAll()
+//                .stream()
+//                .limit(limit)
+//                .collect(Collectors.toList());
+//    }
 
     public Song findSongById(Long id) {
         return songRepository.findById(id)
