@@ -44,6 +44,10 @@ public class SongMapper {
         return new UpdateSongResponseDto(newSong.getName(), newSong.getArtist());
     }
 
+    public static PartiallyUpdateSongResponseDto mapFromSongToPartiallyUpdateSongResponseDto(Song savedSong) {
+        return new PartiallyUpdateSongResponseDto(savedSong.getName(), savedSong.getArtist());
+    }
+
     public static PartiallyUpdateSongResponseDto mapFromSongDtoToPartiallyUpdateSongResponseDto(Song songDto) {
         return new PartiallyUpdateSongResponseDto(songDto.getName(), songDto.getArtist());
     }
@@ -55,4 +59,5 @@ public class SongMapper {
     public static GetAllSongsResponseDto mapFromSongToGetAllSongsResponseDto(List<Song> songs) {
         return new GetAllSongsResponseDto(songs);
     }
+
 }
