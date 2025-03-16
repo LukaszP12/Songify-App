@@ -1,5 +1,6 @@
 package com.songify.song.domain.entities;
 
+import com.songify.song.domain.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,7 +22,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Table(name = "song")
 @ToString
-public class Song {
+public class Song extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -67,5 +68,16 @@ public class Song {
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    @Override
+    public String toString() {
+        return "Song{" +
+                "name='" + name + '\'' +
+                ", artist='" + artist + '\'' +
+                ", releaseDate=" + releaseDate +
+                ", duration=" + duration +
+                ", language=" + language +
+                '}';
     }
 }
