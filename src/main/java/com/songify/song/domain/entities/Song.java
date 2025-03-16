@@ -2,24 +2,29 @@ package com.songify.song.domain.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.time.Instant;
 
 @Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "song")
+@ToString
 public class Song {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(nullable = false)
@@ -27,6 +32,13 @@ public class Song {
 
     @Column(nullable = false)
     private String artist;
+
+    private Instant releaseDate;
+
+    private Long duration;
+
+    @Enumerated(EnumType.STRING)
+    private SongLanguage language;
 
     public Song(String name, String artist) {
         this.name = name;
