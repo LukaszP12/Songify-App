@@ -35,7 +35,7 @@ class Album extends BaseEntity {
 
     private String title;
 
-    private Instant releaseData;
+    private Instant releaseDate;
 
     @OneToMany
     @JoinColumn(name = "album_id")

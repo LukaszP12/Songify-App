@@ -1,7 +1,7 @@
 package com.songify.infrastructure.songplayer.controller;
 
 import com.songify.domain.crud.Song;
-import com.songify.domain.crud.SongCrudFacade;
+import com.songify.domain.crud.SongifyCrudFacade;
 import com.songify.domain.crud.dto.SongDto;
 import com.songify.infrastructure.songplayer.controller.dto.request.PartiallyUpdateSongRequestDto;
 import com.songify.infrastructure.songplayer.controller.dto.response.PartiallyUpdateSongResponseDto;
@@ -49,7 +49,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class SongRestController {
 
-    private final SongCrudFacade songFacade;
+    private final SongifyCrudFacade songFacade;
 
     @GetMapping
     ResponseEntity<GetAllSongsResponseDto> getAllSongs(@PageableDefault(page = 0, size = 10) Pageable pageable) {
