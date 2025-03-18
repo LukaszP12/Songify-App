@@ -14,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 class SongAdder {
 
     private final SongRepository songRepository;
+    private final ArtistRepository artistRepository;
 
     SongDto addSong(final SongRequestDto song) {
-        Song newSong = new Song(song.name(), song.releaseDate(), song.duration(), song.language());
+        Artist artist = artistRepository.findById(song.artistId());
+        Song newSong = new Song(song.name(), artist.getName(), song.releaseDate(), song.duration(), song.language());
         log.info("adding new song: " + song);
         // zapytanie do serwisu songs.com/validate?songName=song
         Song savedSong = songRepository.save(newSong);

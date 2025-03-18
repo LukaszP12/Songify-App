@@ -1,5 +1,6 @@
 package com.songify.domain.crud;
 
+import com.songify.domain.crud.dto.SongRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -19,17 +20,17 @@ class SongUpdater {
         songRepository.updateById(id,newSong);
     }
 
-    public void someComplicatedLogic() {
-        songRepository.updateById(1L, new Song("siema", "siema"));
-        songRepository.updateById(2L, new Song("siema", "siema"));
-        songRetriever.existsById(1000L);
-//        if (true) {
-//            throw new RuntimeException();
-//        }
-        songRepository.updateById(3L, new Song("siema", "siema"));
-        Song piesSong = songAdder.addSong(new Song("pies", "pies"));
-        songRepository.updateById(piesSong.getId(), new Song("pies2", "pies2"));
-    }
+//    public void someComplicatedLogic() {
+//        songRepository.updateById(1L, new Song("siema", "siema"));
+//        songRepository.updateById(2L, new Song("siema", "siema"));
+//        songRetriever.existsById(1000L);
+////        if (true) {
+////            throw new RuntimeException();
+////        }
+//        songRepository.updateById(3L, new Song("siema", "siema"));
+//        Song piesSong = songAdder.addSong(new SongRequestDto("pies", "pies"));
+//        songRepository.updateById(piesSong.getId(), new Song("pies2", "pies2"));
+//    }
 
     public void transfer(){
         // start point
