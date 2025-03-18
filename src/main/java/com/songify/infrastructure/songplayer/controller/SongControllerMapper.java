@@ -1,6 +1,6 @@
 package com.songify.infrastructure.songplayer.controller;
 
-import com.songify.domain.crud.song.dto.SongDto;
+import com.songify.domain.crud.dto.SongDto;
 import com.songify.infrastructure.songplayer.controller.dto.request.CreateSongRequestDto;
 import com.songify.infrastructure.songplayer.controller.dto.request.PartiallyUpdateSongRequestDto;
 import com.songify.infrastructure.songplayer.controller.dto.request.UpdateSongRequestDto;

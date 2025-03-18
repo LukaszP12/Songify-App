@@ -1,6 +1,6 @@
 package com.songify.infrastructure.songplayer.controller.error;
 
-import com.songify.domain.crud.song.SongNotFoundException;
+import com.songify.domain.crud.SongNotFoundException;
 import com.songify.infrastructure.songplayer.controller.SongRestController;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
