@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AccessLevel;
@@ -35,10 +37,15 @@ class Album extends BaseEntity {
 
     private Instant releaseData;
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany
+    @JoinColumn(name = "album_id")
     private Set<Song> songs = new HashSet<>();
 
     void addSongToAlbum(Song song) {
         songs.add(song);
     }
+
+    @ManyToMany(mappedBy = "albums")
+    private Set<Artist> artists = new HashSet<>();
+
 }
