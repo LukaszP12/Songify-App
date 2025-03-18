@@ -1,17 +1,24 @@
 package com.songify.domain.crud;
 
+import com.songify.domain.crud.dto.AlbumDto;
+import com.songify.domain.crud.dto.AlbumRequestDto;
 import com.songify.domain.crud.dto.ArtistDto;
 import com.songify.domain.crud.dto.ArtistRequestDto;
+import com.songify.domain.crud.dto.GenreDto;
+import com.songify.domain.crud.dto.GenreRequestDto;
 import com.songify.domain.crud.dto.SongDto;
+import com.songify.domain.crud.dto.SongRequestDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
+@Transactional
 public class SongifyCrudFacade {
 
     private final SongRetriever songRetriever;
@@ -19,9 +26,25 @@ public class SongifyCrudFacade {
     private final SongDeleter songDeleter;
     private final SongAdder songAdder;
     private final ArtistAdder artistAdder;
+    private final GenreAdder genreAdder;
+    private final AlbumAdder albumAdder;
 
     public ArtistDto addArtist(ArtistRequestDto dto) {
         return artistAdder.addArtist(dto.name());
+    }
+
+    public GenreDto addGenre(GenreRequestDto dto) {
+        return genreAdder.addGenre(dto.name());
+    }
+
+    public AlbumDto addAlbumWithSong(AlbumRequestDto albumRequestDto) {
+        return albumAdder.addAlbum(albumRequestDto.songId(),
+                albumRequestDto.title(),
+                albumRequestDto.releaseDate());
+    }
+
+    public SongDto addSong(final SongRequestDto dto) {
+        return songAdder.addSong(dto);
     }
 
     public List<SongDto> findAllSongs(Pageable pageable) {
@@ -33,11 +56,6 @@ public class SongifyCrudFacade {
         return SongDto.builder()
                 .name(song.getName())
                 .build();
-    }
-
-    public SongDto addSong(Song song) {
-        songAdder.addSong(song);
-        return new SongDto(song.getId(), song.getName());
     }
 
     public void deleteSongById(Long id) {

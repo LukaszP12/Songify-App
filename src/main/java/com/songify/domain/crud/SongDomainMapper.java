@@ -1,5 +1,6 @@
 package com.songify.domain.crud;
 
+import com.songify.domain.crud.dto.SongRequestDto;
 import com.songify.infrastructure.songplayer.controller.dto.request.CreateSongRequestDto;
 import com.songify.infrastructure.songplayer.controller.dto.request.PartiallyUpdateSongRequestDto;
 import com.songify.infrastructure.songplayer.controller.dto.request.UpdateSongRequestDto;
@@ -9,6 +10,10 @@ public class SongDomainMapper {
 
     public static SongDto mapFromSongToSongDto(Song song) {
         return new SongDto(song.getId(), song.getName(), song.getArtist());
+    }
+
+    public static Song mapFromSongRequestDtoToSong(SongRequestDto dto) {
+        return new Song(dto.name());
     }
 
     public static Song mapFromCreateSongRequestDtoToSong(CreateSongRequestDto dto) {

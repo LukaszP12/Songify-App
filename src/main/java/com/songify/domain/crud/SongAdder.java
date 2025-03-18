@@ -1,5 +1,7 @@
 package com.songify.domain.crud;
 
+import com.songify.domain.crud.dto.SongDto;
+import com.songify.domain.crud.dto.SongRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,11 @@ class SongAdder {
 
     private final SongRepository songRepository;
 
-    public Song addSong(Song song) {
+    SongDto addSong(final SongRequestDto song) {
+        Song newSong = new Song(song.name(), song.releaseDate(), song.duration(), song.language());
         log.info("adding new song: " + song);
         // zapytanie do serwisu songs.com/validate?songName=song
-        Song savedSong = songRepository.save(song);
-        return savedSong;
+        Song savedSong = songRepository.save(newSong);
+        return new SongDto(savedSong.getId(), savedSong.getName());
     }
 }

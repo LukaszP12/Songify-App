@@ -24,41 +24,41 @@ public class SongControllerMapper {
                 .build();
     }
 
-    static SongDto mapFromUpdateSongRequestDtoToSongDto(UpdateSongRequestDto dto) {
+    public static SongDto mapFromUpdateSongRequestDtoToSongDto(UpdateSongRequestDto dto) {
         return SongDto
                 .builder()
                 .name(dto.songName())
                 .build();
     }
 
-    static SongDto mapFromPartiallyUpdateSongRequestDtoToSong(PartiallyUpdateSongRequestDto dto) {
+    public static SongDto mapFromPartiallyUpdateSongRequestDtoToSong(PartiallyUpdateSongRequestDto dto) {
         return SongDto
                 .builder()
                 .name(dto.songName())
                 .build();
     }
 
-    static CreateSongResponseDto mapFromSongToCreateSongResponseDto(SongDto songDto) {
+    public static CreateSongResponseDto mapFromSongToCreateSongResponseDto(SongDto songDto) {
         return new CreateSongResponseDto(songDto);
     }
 
-    static DeleteSongResponseDto mapFromSongToDeleteSongResponseDto(Long id) {
+    public static DeleteSongResponseDto mapFromSongToDeleteSongResponseDto(Long id) {
         return new DeleteSongResponseDto("You deleted song with id: " + id, HttpStatus.OK);
     }
 
-    static UpdateSongResponseDto mapFromSongToUpdateSongResponseDto(SongDto newSong) {
+    public static UpdateSongResponseDto mapFromSongToUpdateSongResponseDto(SongDto newSong) {
         return new UpdateSongResponseDto(newSong.name(), "testt");
     }
 
-    static PartiallyUpdateSongResponseDto mapFromSongDtoToPartiallyUpdateSongResponseDto(SongDto songDto) {
+    public static PartiallyUpdateSongResponseDto mapFromSongDtoToPartiallyUpdateSongResponseDto(SongDto songDto) {
         return new PartiallyUpdateSongResponseDto(songDto);
     }
 
-    static GetSongResponseDto mapFromSongToGetSongResponseDto(SongDto songDto) {
+    public static GetSongResponseDto mapFromSongToGetSongResponseDto(SongDto songDto) {
         return new GetSongResponseDto(songDto);
     }
 
-    static GetAllSongsResponseDto mapFromSongToGetAllSongsResponseDto(List<SongDto> songs) {
+    public static GetAllSongsResponseDto mapFromSongToGetAllSongsResponseDto(List<SongDto> songs) {
         return new GetAllSongsResponseDto(songs);
     }
 
