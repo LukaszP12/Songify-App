@@ -20,18 +20,6 @@ class SongUpdater {
         songRepository.updateById(id,newSong);
     }
 
-//    public void someComplicatedLogic() {
-//        songRepository.updateById(1L, new Song("siema", "siema"));
-//        songRepository.updateById(2L, new Song("siema", "siema"));
-//        songRetriever.existsById(1000L);
-////        if (true) {
-////            throw new RuntimeException();
-////        }
-//        songRepository.updateById(3L, new Song("siema", "siema"));
-//        Song piesSong = songAdder.addSong(new SongRequestDto("pies", "pies"));
-//        songRepository.updateById(piesSong.getId(), new Song("pies2", "pies2"));
-//    }
-
     public void transfer(){
         // start point
         songRepository.updateById(1L,new Song("2000","bartek"));

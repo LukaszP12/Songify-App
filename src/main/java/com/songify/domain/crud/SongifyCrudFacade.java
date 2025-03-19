@@ -29,6 +29,7 @@ public class SongifyCrudFacade {
     private final ArtistAdder artistAdder;
     private final ArtistRetriever artistRetriever;
     private final GenreAdder genreAdder;
+    private final GenreDeleter genreDeleter;
     private final AlbumAdder albumAdder;
     private final AlbumRetriever albumRetriever;
 
@@ -66,6 +67,14 @@ public class SongifyCrudFacade {
         songRetriever.existsById(id);
         songDeleter.deleteSongById(id);
     }
+
+//    public void deleteSongAndGenreById(final Long songId) {
+//        Song songById = songRetriever.findSongById(songId);
+//        Long genreId = songById.getGenre().getId();
+//
+//        deleteSongById(songId);
+//        genreDeleter.deleteGenreById(genreId);
+//    }
 
     public void updateSongById(Long id, SongDto newSongDto) {
         songRetriever.existsById(id);

@@ -23,9 +23,9 @@ public interface SongRepository extends Repository<Song, Long> {
 
     List<Song> findAllByArtistEqualsIgnoreCaseOrderById(String artist);
 
-    @Modifying
-    @Query("DELETE FROM Song s WHERE s.id = :id")
-    void deleteById(Long id);
+//    @Modifying
+//    @Query("DELETE FROM Song s WHERE s.id = :id")
+//    void deleteById(Long id);
 
     @Modifying
     @Query("UPDATE Song s SET s.name = :#{#newSong.name}, s.artist = :#{#newSong.artist} WHERE s.id = :id")
@@ -34,4 +34,6 @@ public interface SongRepository extends Repository<Song, Long> {
     Song save(Song song);
 
     boolean existsById(Long id);
+
+    void deleteById(Long id);
 }
