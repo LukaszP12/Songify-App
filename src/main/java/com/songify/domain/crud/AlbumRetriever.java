@@ -25,6 +25,7 @@ class AlbumRetriever {
         Set<Artist> artists = album.getArtists();
         Set<Song> songs = album.getSongs();
 
+        AlbumDto albumDto = new AlbumDto(album.getId(), album.getTitle());
         Set<ArtistDto> artistDtos = artists.stream()
                 .map(artist -> new ArtistDto(artist.getId(), artist.getName()))
                 .collect(Collectors.toSet());
@@ -34,7 +35,7 @@ class AlbumRetriever {
                 .collect(Collectors.toSet());
 
         return new AlbumDtoWithArtistsAndSongs(
-                new AlbumDto(album.getId(), album.getTitle()),
+                albumDto,
                 artistDtos,
                 songDtos
         );
