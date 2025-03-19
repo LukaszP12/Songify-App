@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,9 +21,10 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter(AccessLevel.PACKAGE)
 @Setter(AccessLevel.PACKAGE)
-class Album extends BaseEntity {
+public class Album extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "album_id_seq", strategy = GenerationType.SEQUENCE)
@@ -37,11 +39,15 @@ class Album extends BaseEntity {
 
     private Instant releaseDate;
 
+    public Album(String title) {
+        this.title = title;
+    }
+
     @OneToMany
     @JoinColumn(name = "album_id")
     private Set<Song> songs = new HashSet<>();
 
-    void addSongToAlbum(Song song) {
+    void addSongToAlbum(final Song song) {
         songs.add(song);
     }
 

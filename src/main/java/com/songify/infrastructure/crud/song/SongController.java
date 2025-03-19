@@ -61,7 +61,7 @@ class SongController {
     public ResponseEntity<GetSongResponseDto> getSongById(@PathVariable Long id,
                                                           @RequestHeader(required = false) String requestId) {
         log.info(requestId);
-        SongDto songById = songFacade.findSongById(id);
+        SongDto songById = songFacade.findSongDtoById(id);
         GetSongResponseDto response = mapFromSongToGetSongResponseDto(songById);
         return ResponseEntity.ok(response);
     }
