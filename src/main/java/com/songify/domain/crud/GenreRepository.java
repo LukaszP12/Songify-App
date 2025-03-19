@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 @org.springframework.stereotype.Repository
 interface GenreRepository extends Repository<Genre, Long> {
 
+    @Transactional
     @Modifying
     @Query("delete from Genre g where g.id = :id")
     int deleteById(Long id);

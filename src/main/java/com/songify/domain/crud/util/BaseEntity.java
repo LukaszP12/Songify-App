@@ -19,7 +19,7 @@ public abstract class BaseEntity implements Serializable {
     public Instant createdOn;
 
     @Version
-    private BigInteger version;
+    private long version;
 
     @Override
     public boolean equals(Object o) {

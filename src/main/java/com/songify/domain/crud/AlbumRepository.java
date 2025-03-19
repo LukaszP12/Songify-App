@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.Set;
 
-public interface AlbumRepository extends Repository<Album, Long> {
+interface AlbumRepository extends Repository<Album, Long> {
 
     Album save(Album album);
 

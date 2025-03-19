@@ -1,5 +1,6 @@
 package com.songify.domain.crud;
 
+import com.songify.domain.crud.Album;
 import com.songify.domain.crud.util.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,7 +22,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter(AccessLevel.PACKAGE)
 @Setter(AccessLevel.PACKAGE)
-public class Artist extends BaseEntity {
+class Artist extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "artist_id_seq", strategy = GenerationType.SEQUENCE)
@@ -46,7 +47,7 @@ public class Artist extends BaseEntity {
         album.addArtist(this);
     }
 
-    void removeAlbum(Album album) {
+    public void removeAlbum(Album album) {
         albums.remove(album);
 //        album.removeArtist(this);
     }

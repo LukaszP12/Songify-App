@@ -13,6 +13,7 @@ import java.util.List;
 @Service
 @Log4j2
 @RequiredArgsConstructor
+public
 class SongRetriever {
 
     private final SongRepository songRepository;

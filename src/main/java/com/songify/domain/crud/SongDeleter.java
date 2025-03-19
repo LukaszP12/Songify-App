@@ -5,6 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -19,6 +21,10 @@ class SongDeleter {
     public void deleteSongById(Long id) {
         log.info("removing old song with id: " + id);
         songRepository.deleteById(id);
+    }
+
+    void deleteAllSongsById(final Set<Long> songsIds) {
+        songRepository.deleteByIdIn(songsIds);
     }
 
     public void deleteSongAndGenreById(final Long songId) {
