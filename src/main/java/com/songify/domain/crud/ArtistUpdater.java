@@ -14,7 +14,7 @@ class ArtistUpdater {
     ArtistDto updateArtistNameById(final Long artistId, final String name) {
         Artist artist = artistRetriever.findById(artistId);
         artist.setName(name);
-//        repository.updateNameById(name, artistId);
+//        artistRepository.updateNameById(name, artistId);
         return new ArtistDto(artist.getId(), artist.getName());
     }
 }

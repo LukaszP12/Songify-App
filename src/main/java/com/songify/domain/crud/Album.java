@@ -43,7 +43,7 @@ public class Album extends BaseEntity {
         this.title = title;
     }
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "album_id")
     private Set<Song> songs = new HashSet<>();
 
