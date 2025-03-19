@@ -1,8 +1,8 @@
 package com.songify.infrastructure.crud.album;
 
+import com.songify.domain.crud.AlbumInfo;
 import com.songify.domain.crud.SongifyCrudFacade;
 import com.songify.domain.crud.dto.AlbumDto;
-import com.songify.domain.crud.dto.AlbumDtoWithArtistsAndSongs;
 import com.songify.domain.crud.dto.AlbumRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,8 @@ class AlbumController {
     }
 
     @GetMapping("/{albumId}")
-    ResponseEntity<AlbumDtoWithArtistsAndSongs> getAlbumWithArtistsAndSongs(@PathVariable Long albumId) {
-        AlbumDtoWithArtistsAndSongs albumByIdWithArtistsAndSongs = songifyCrudFacade.findAlbumByIdWithArtistsAndSongs(albumId);
+    ResponseEntity<AlbumInfo> getAlbumWithArtistsAndSongs(@PathVariable Long albumId) {
+        AlbumInfo albumByIdWithArtistsAndSongs = songifyCrudFacade.findAlbumByIdWithArtistsAndSongs(albumId);
         return ResponseEntity.ok(albumByIdWithArtistsAndSongs);
     }
 }

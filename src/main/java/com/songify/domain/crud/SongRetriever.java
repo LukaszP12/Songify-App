@@ -1,5 +1,6 @@
 package com.songify.domain.crud;
 
+import com.songify.domain.crud.dto.GenreDto;
 import com.songify.domain.crud.dto.SongDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -21,21 +21,30 @@ class SongRetriever {
 
     public List<SongDto> findAll(Pageable pageable) {
         log.info("retrieving all songs: ");
-        return songRepository.findAll(pageable)
-                .stream()
-                .map(song -> SongDto.builder()
-                        .id(song.getId())
-                        .name(song.getName())
-                        .build()).collect(Collectors.toList());
-    }
-
-//    public List<Song> findAllLimitedBy(Integer limit) {
-//        return songRepository
-//                .findAll()
+//        return songRepository.findAll(pageable)
 //                .stream()
-//                .limit(limit)
-//                .collect(Collectors.toList());
-//    }
+//                .map(song -> SongDto.builder()
+//                        .id(song.getId())
+//                        .name(song.getName())
+//                        .build()).collect(Collectors.toList());
+
+        List<SongDto> songDtoList = new ArrayList<>();
+        List<Song> songs = songRepository.findAll(pageable);
+
+        for (Song song : songs) {
+            Genre genre = song.getGenre();
+            GenreDto genreDto = new GenreDto(genre.getId(), genre.getName());
+
+            SongDto songDto = SongDto.builder()
+                    .id(song.getId())
+                    .name(song.getName())
+                    .genreDto(genreDto)
+                    .build();
+
+            songDtoList.add(songDto);
+        }
+        return songDtoList;
+    }
 
     SongDto findSongDtoById(Long id) {
         Song song = songRepository.findById(id)

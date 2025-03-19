@@ -54,4 +54,12 @@ public class Album extends BaseEntity {
     @ManyToMany(mappedBy = "albums")
     private Set<Artist> artists = new HashSet<>();
 
+    void addArtist(final Artist artist) {
+        artists.add(artist);
+    }
+
+    void removeArtist(Artist artist) {
+        artists.remove(artist);
+        artist.removeAlbum(this);
+    }
 }
