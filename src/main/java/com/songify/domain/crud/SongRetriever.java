@@ -37,9 +37,14 @@ class SongRetriever {
 //                .collect(Collectors.toList());
 //    }
 
-    Song findSongById(Long id) {
-        return songRepository.findById(id)
+    SongDto findSongDtoById(Long id) {
+        Song song = songRepository.findById(id)
                 .orElseThrow(() -> new SongNotFoundException("" + id));
+        SongDto songDto = SongDto.builder()
+                .id(song.getId())
+                .name(song.getName())
+                .build();
+        return songDto;
     }
 
     public List<Song> findByArtistEquals() {
@@ -68,5 +73,11 @@ class SongRetriever {
             log.info(songs.get(0).equals(songs.get(1)));
         }
         return song1;
+    }
+
+    public Song findSongById(Long id) {
+        Song song = songRepository.findById(id)
+                .orElseThrow(() -> new SongNotFoundException("" + id));
+        return song;
     }
 }
