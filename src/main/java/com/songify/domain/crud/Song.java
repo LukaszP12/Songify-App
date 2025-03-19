@@ -33,6 +33,7 @@ import java.time.Instant;
                 columnList = "name"
         ))
 @ToString
+public
 class Song extends BaseEntity {
 
     @Id
