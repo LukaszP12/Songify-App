@@ -16,6 +16,7 @@ import java.util.Set;
 import static com.songify.domain.crud.SongLanguage.ENGLISH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class SongifyCrudFacadeTest {
@@ -191,8 +192,25 @@ class SongifyCrudFacadeTest {
 
     @Test
     public void should_add_album_with_song() {
-        // toDo
-
+        // given
+        SongRequestDto songRequestDto = SongRequestDto.builder()
+                .name("song1")
+                .language(ENGLISH)
+                .build();
+        SongDto songDto = songifyCrudFacade.addSong(songRequestDto);
+        AlbumRequestDto album = AlbumRequestDto
+                .builder()
+                .songId(songDto.id())
+                .title("album title 1")
+                .build();
+        assertThat(songifyCrudFacade.findAllAlbums()).isEmpty();
+        // when
+        AlbumDto albumDto = songifyCrudFacade.addAlbumWithSong(album);
+        // then
+        assertThat(songifyCrudFacade.findAllAlbums()).isNotEmpty();
+        AlbumInfo albumWithSongs = songifyCrudFacade.findAlbumByIdWithArtistsAndSongs(albumDto.id());
+        Set<AlbumInfo.SongInfo> songs = albumWithSongs.getSongs();
+        assertTrue(songs.stream().anyMatch(song -> song.getId().equals(songDto.id())));
     }
 
     @Test
@@ -217,7 +235,7 @@ class SongifyCrudFacadeTest {
     }
 
     @Test
-    public void should_return_album_by_id(){
+    public void should_return_album_by_id() {
 
     }
 
