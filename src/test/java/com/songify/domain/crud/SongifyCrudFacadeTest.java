@@ -1,13 +1,16 @@
 package com.songify.domain.crud;
 
+import com.songify.domain.crud.dto.AlbumDto;
 import com.songify.domain.crud.dto.ArtistDto;
 import com.songify.domain.crud.dto.ArtistRequestDto;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 
 class SongifyCrudFacadeTest {
@@ -56,39 +59,27 @@ class SongifyCrudFacadeTest {
     }
 
     @Test
-    public void should_add_artist_amigo_when_amigo_was_sent() {
+    @DisplayName("should add artist 'amigo' with id:0 when amigo was sent")
+    public void should_add_artist_amigo_with_id_zero_when_amigo_was_sent() {
         // given
-        ArtistRequestDto shawnMendes = ArtistRequestDto.builder()
+        ArtistRequestDto artist = ArtistRequestDto.builder()
                 .name("amigo")
                 .build();
         Set<ArtistDto> allArtists = songifyCrudFacade.findAllArtists(Pageable.unpaged());
         assertThat(allArtists).isEmpty();
         // when
-        ArtistDto response = songifyCrudFacade.addArtist(shawnMendes);
+        ArtistDto response = songifyCrudFacade.addArtist(artist);
 
         // then
         assertThat(response.id()).isEqualTo(0L);
         assertThat(response.name()).isEqualTo("amigo");
+        int size = songifyCrudFacade.findAllArtists(Pageable.unpaged()).size();
+        assertThat(size).isEqualTo(1);
     }
 
     @Test
-    public void should_add_return_correct_dto() {
-        // given
-        ArtistRequestDto shawnMendes = ArtistRequestDto.builder()
-                .name("amigo")
-                .build();
-        Set<ArtistDto> allArtists = songifyCrudFacade.findAllArtists(Pageable.unpaged());
-        assertThat(allArtists).isEmpty();
-        // when
-        ArtistDto response = songifyCrudFacade.addArtist(shawnMendes);
-
-        // then
-        assertThat(response.name()).isEqualTo("amigo");
-        assertThat(response.id()).isNotNull();
-    }
-
-    @Test
-    public void should_add_shawn_mendes_when_amigo_was_sent() {
+    @DisplayName("should add artist shawn mendes with id zero when shawn mendes was sent")
+    public void should_add_artist_shawn_mendes_with_id_zero_when_shawn_mendes_was_sent() {
         // given
         ArtistRequestDto shawnMendes = ArtistRequestDto.builder()
                 .name("shawn mendes")
@@ -101,12 +92,64 @@ class SongifyCrudFacadeTest {
     }
 
     @Test
-    public void third() {
+    @DisplayName("should throw exception ArtistNotFound when id: 0")
+    public void should_throw_exception_artist_not_found_when_id_was_zero() {
         // given
-
+        assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isEmpty();
         // when
-
+        Throwable throwable = catchThrowable(() -> songifyCrudFacade.deleteArtistByIdWithAlbumsAndSongs(0L));
         // then
-
+        assertThat(throwable).isInstanceOf(ArtistNotFoundException.class);
+        assertThat(throwable.getMessage()).isEqualTo("artist with id: 0 not found");
     }
+
+    @Test
+    @DisplayName("Should not throw exception")
+    public void should_not_throw_exception() {
+        // given
+        ArtistRequestDto shawnMendes = ArtistRequestDto.builder()
+                .name("shawn mendes")
+                .build();
+        ArtistDto artistDto = songifyCrudFacade.addArtist(shawnMendes);
+        assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isNotEmpty();
+        // when
+        songifyCrudFacade.deleteArtistByIdWithAlbumsAndSongs(artistDto.id());
+        // then
+        assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("should delete artist by id when he has no albums")
+    public void should_delete_artist_by_id_when_he_has_no_albums() {
+        // given
+        ArtistRequestDto shawnMendes = ArtistRequestDto.builder()
+                .name("shawn mendes")
+                .build();
+        ArtistDto artistDto = songifyCrudFacade.addArtist(shawnMendes);
+        assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isNotEmpty();
+        Long artistId = artistDto.id();
+        Set<AlbumDto> albumsByArtistId = songifyCrudFacade.findAlbumsDtoByArtistId(artistId);
+        // when
+        songifyCrudFacade.deleteArtistByIdWithAlbumsAndSongs(artistId);
+        // then
+        assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("should delete artist by id when he has one album")
+    public void should_delete_artist_by_id_when_he_has_one_album() {
+        // given
+        ArtistRequestDto shawnMendes = ArtistRequestDto.builder()
+                .name("shawn mendes")
+                .build();
+        ArtistDto artistDto = songifyCrudFacade.addArtist(shawnMendes);
+        assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isNotEmpty();
+        Long artistId = artistDto.id();
+        Set<AlbumDto> albumsByArtistId = songifyCrudFacade.findAlbumsDtoByArtistId(artistId);
+        // when
+        songifyCrudFacade.deleteArtistByIdWithAlbumsAndSongs(artistId);
+        // then
+        assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isEmpty();
+    }
+
 }

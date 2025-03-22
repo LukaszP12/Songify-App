@@ -28,11 +28,6 @@ class InMemoryArtistRepository implements ArtistRepository {
     }
 
     @Override
-    public Set<Artist> findAll() {
-        return null;
-    }
-
-    @Override
     public Set<Artist> findAll(final Pageable pageable) {
         return new HashSet<>(db.values());
     }
