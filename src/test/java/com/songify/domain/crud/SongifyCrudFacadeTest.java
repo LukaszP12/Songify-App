@@ -128,7 +128,7 @@ class SongifyCrudFacadeTest {
         ArtistDto artistDto = songifyCrudFacade.addArtist(shawnMendes);
         assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isNotEmpty();
         Long artistId = artistDto.id();
-        Set<AlbumDto> albumsByArtistId = songifyCrudFacade.findAlbumsDtoByArtistId(artistId);
+        assertThat(songifyCrudFacade.findAlbumsByArtistId(artistId)).isEmpty();
         // when
         songifyCrudFacade.deleteArtistByIdWithAlbumsAndSongs(artistId);
         // then
@@ -139,17 +139,11 @@ class SongifyCrudFacadeTest {
     @DisplayName("should delete artist by id when he has one album")
     public void should_delete_artist_by_id_when_he_has_one_album() {
         // given
-        ArtistRequestDto shawnMendes = ArtistRequestDto.builder()
-                .name("shawn mendes")
-                .build();
-        ArtistDto artistDto = songifyCrudFacade.addArtist(shawnMendes);
-        assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isNotEmpty();
-        Long artistId = artistDto.id();
-        Set<AlbumDto> albumsByArtistId = songifyCrudFacade.findAlbumsDtoByArtistId(artistId);
+
         // when
-        songifyCrudFacade.deleteArtistByIdWithAlbumsAndSongs(artistId);
+
         // then
-        assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isEmpty();
+
     }
 
 }
