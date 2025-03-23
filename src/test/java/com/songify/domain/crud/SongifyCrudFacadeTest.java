@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
 
-import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 import static com.songify.domain.crud.SongLanguage.ENGLISH;
@@ -214,12 +214,39 @@ class SongifyCrudFacadeTest {
     }
 
     @Test
+    @DisplayName("should add artist to album")
     public void should_add_artist_to_album() {
         // toDo
-
+        // given
+        ArtistRequestDto shawnMendes = ArtistRequestDto.builder()
+                .name("shawn mendes")
+                .build();
+        Long artistId = songifyCrudFacade.addArtist(shawnMendes).id();
+        SongRequestDto song = SongRequestDto.builder()
+                .name("song1")
+                .language(ENGLISH)
+                .build();
+        SongDto songDto = songifyCrudFacade.addSong(song);
+        Long songId = songDto.id();
+        AlbumDto albumDto = songifyCrudFacade.addAlbumWithSong(AlbumRequestDto
+                .builder()
+                .songId(songId)
+                .title("album title 1")
+                .build());
+        Long albumId = albumDto.id();
+        assertThat(songifyCrudFacade.findAlbumsByArtistId(artistId)).isEmpty();
+        // when
+        songifyCrudFacade.addArtistToAlbum(artistId, albumId);
+        // then
+        Set<Album> albumsByArtistId = songifyCrudFacade.findAlbumsByArtistId(artistId);
+        assertThat(albumsByArtistId).isNotEmpty();
+        assertThat(albumsByArtistId)
+                .extracting(Album::getId)
+                .containsExactly(albumId);
     }
 
     @Test
+    @DisplayName("should add song")
     public void should_add_song() {
         // toDo
         // given
@@ -227,11 +254,14 @@ class SongifyCrudFacadeTest {
                 .name("song1")
                 .language(ENGLISH)
                 .build();
+        assertThat(songifyCrudFacade.findAllSongs(Pageable.unpaged())).isEmpty();
         // when
-        SongDto songDto = songifyCrudFacade.addSong(song);
+        songifyCrudFacade.addSong(song);
         // then
-        Long songId = songDto.id();
-        assertThat(songifyCrudFacade.findSongDtoById(songId));
+        List<SongDto> allSongs = songifyCrudFacade.findAllSongs(Pageable.unpaged());
+        assertThat(allSongs)
+                .extracting(SongDto::id)
+                .containsExactly(0L);
     }
 
     @Test
