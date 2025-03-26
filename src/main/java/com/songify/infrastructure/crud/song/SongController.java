@@ -45,8 +45,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/songs")
-public
-class SongController {
+public class SongController {
 
     private final SongifyCrudFacade songFacade;
 
