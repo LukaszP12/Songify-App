@@ -1,6 +1,7 @@
 package com.songify.domain.crud;
 
 class InMemoryGenreRepository implements GenreRepository {
+
     @Override
     public int deleteById(final Long id) {
         return 0;

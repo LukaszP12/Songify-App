@@ -7,6 +7,7 @@ import java.util.Set;
  * Projection for {@link Album}
  */
 public interface AlbumInfo {
+
     Long getId();
 
     String getTitle();
@@ -25,12 +26,6 @@ public interface AlbumInfo {
         Instant getReleaseDate();
 
         Long getDuration();
-
-        SongLanguageInfo getSongLanguage();
-
-        interface SongLanguageInfo {
-            String getName();
-        }
 
         GenreInfo getGenre();
 

@@ -33,8 +33,7 @@ import java.time.Instant;
                 columnList = "name"
         ))
 @ToString
-public
-class Song extends BaseEntity {
+public class Song extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "song_id_seq", strategy = GenerationType.SEQUENCE)
@@ -56,7 +55,7 @@ class Song extends BaseEntity {
     private Long duration;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private Genre genre;
+    private Genre genre = new Genre(1L, "default");
 
     @Enumerated(EnumType.STRING)
     private SongLanguage language;
@@ -82,13 +81,8 @@ class Song extends BaseEntity {
         this.artist = artist;
     }
 
-    public Song(final String name,
-                final String artist,
-                final Instant releaseDate,
-                final Long duration,
-                final SongLanguage language) {
+    Song(final String name, final Instant releaseDate, final Long duration, final SongLanguage language) {
         this.name = name;
-        this.artist = artist;
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.language = language;

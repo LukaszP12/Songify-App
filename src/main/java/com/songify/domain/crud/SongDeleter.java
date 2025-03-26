@@ -15,7 +15,6 @@ class SongDeleter {
 
     private final SongRepository songRepository;
     private final SongRetriever songRetriever;
-    private final SongUpdater songUpdater;
     private final GenreDeleter genreDeleter;
 
     public void deleteSongById(Long id) {

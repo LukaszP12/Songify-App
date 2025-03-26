@@ -40,27 +40,27 @@ class Album extends BaseEntity {
 
     private Instant releaseDate;
 
-    public Album(String title) {
-        this.title = title;
-    }
-
-    @OneToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "album_id")
     private Set<Song> songs = new HashSet<>();
+
+    @ManyToMany(mappedBy = "albums")
+    private Set<Artist> artists = new HashSet<>();
 
     void addSongToAlbum(final Song song) {
         songs.add(song);
     }
 
-    @ManyToMany(mappedBy = "albums")
-    private Set<Artist> artists = new HashSet<>();
+    void removeArtist(Artist artist) {
+        artists.remove(artist);
+        artist.removeAlbum(this);
+    }
 
     void addArtist(final Artist artist) {
         artists.add(artist);
     }
 
-    void removeArtist(Artist artist) {
-        artists.remove(artist);
-        artist.removeAlbum(this);
+    public void addSongsToAlbum(Set<Song> songs) {
+        songs.addAll(songs);
     }
 }

@@ -1,4 +1,6 @@
 package com.songify.domain.crud.dto;
 
-public record AlbumDto(Long id,String name) {
+public record AlbumDto(
+        Long id,
+        String name) {
 }

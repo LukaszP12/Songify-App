@@ -9,7 +9,6 @@ class ArtistAssigner {
 
     private final ArtistRetriever artistRetriever;
     private final AlbumRetriever albumRetriever;
-    private final ArtistRepository artistRepository;
 
     void addArtistToAlbum(final Long artistId, final Long albumId) {
         Artist artist = artistRetriever.findById(artistId);

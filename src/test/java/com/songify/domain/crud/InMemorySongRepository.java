@@ -2,11 +2,12 @@ package com.songify.domain.crud;
 
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class InMemorySongRepository implements SongRepository {
@@ -14,27 +15,17 @@ class InMemorySongRepository implements SongRepository {
     Map<Long, Song> db = new HashMap<>();
     AtomicInteger index = new AtomicInteger(0);
 
-//    @Override
-//    public int deleteByIdIn(final Collection<Long> ids) {
-//        ids.forEach(
-//                id -> db.remove(id)
-//        );
-//        return 0;
-//    }
-
     @Override
-    public List<Song> findAllByArtistEqualsIgnoreCaseOrderById(String artist) {
-        return null;
-    }
-
-    @Override
-    public int deleteByIdIn(Set<Long> ids) {
+    public int deleteByIdIn(final Collection<Long> ids) {
+        ids.forEach(
+                id -> db.remove(id)
+        );
         return 0;
     }
 
     @Override
     public List<Song> findAll(final Pageable pageable) {
-        return null;
+        return new ArrayList<>(db.values());
     }
 
     @Override

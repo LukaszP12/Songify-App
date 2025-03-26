@@ -27,10 +27,9 @@ public class SongifyCrudFacade {
     private final SongDeleter songDeleter;
     private final SongAdder songAdder;
     private final ArtistAdder artistAdder;
-    private final ArtistRetriever artistRetriever;
     private final GenreAdder genreAdder;
-    private final GenreDeleter genreDeleter;
     private final AlbumAdder albumAdder;
+    private final ArtistRetriever artistRetriever;
     private final AlbumRetriever albumRetriever;
     private final ArtistDeleter artistDeleter;
     private final ArtistAssigner artistAssigner;
@@ -44,8 +43,8 @@ public class SongifyCrudFacade {
         return genreAdder.addGenre(dto.name());
     }
 
-    public AlbumDto addAlbumWithSong(AlbumRequestDto albumRequestDto) {
-        return albumAdder.addAlbum(albumRequestDto.songId(),
+    public AlbumDto addAlbumWithSongs(AlbumRequestDto albumRequestDto) {
+        return albumAdder.addAlbum(albumRequestDto.songsIds(),
                 albumRequestDto.title(),
                 albumRequestDto.releaseDate());
     }
@@ -76,6 +75,14 @@ public class SongifyCrudFacade {
 
     public void deleteArtistByIdWithAlbumsAndSongs(Long artistId) {
         artistDeleter.deleteArtistByIdWithAlbumsAndSongs(artistId);
+    }
+
+    Set<Album> findAlbumsByArtistId(Long artistId) {
+        return albumRetriever.findAlbumsByArtistId(artistId);
+    }
+
+    Set<AlbumDto> findAlbumsDtoByArtistId(Long artistId) {
+        return albumRetriever.findAlbumsDtoByArtistId(artistId);
     }
 
     public List<SongDto> findAllSongs(Pageable pageable) {
@@ -111,7 +118,7 @@ public class SongifyCrudFacade {
             toSave.setName(songFromDatabase.getName());
         }
 
-        songUpdater.updatePartiallyById(id, toSave);
+        songUpdater.updateById(id, toSave);
         return SongDto.builder()
                 .id(toSave.getId())
                 .name(toSave.getName())
@@ -121,5 +128,17 @@ public class SongifyCrudFacade {
     public SongDto findSongDtoById(Long id) {
         SongDto songDtoById = songRetriever.findSongDtoById(id);
         return songDtoById;
+    }
+
+    long countArtistsByAlbumId(final Long albumId) {
+        return albumRetriever.countArtistsByAlbumId(albumId);
+    }
+
+    AlbumDto findAlbumById(final Long albumId) {
+        return albumRetriever.findDtoById(albumId);
+    }
+
+    public Set<AlbumDto> findAllAlbums() {
+        return albumRetriever.findAll();
     }
 }

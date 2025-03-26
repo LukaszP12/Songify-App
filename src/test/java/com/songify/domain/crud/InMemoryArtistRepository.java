@@ -15,8 +15,9 @@ class InMemoryArtistRepository implements ArtistRepository {
     AtomicInteger index = new AtomicInteger(0);
 
     @Override
-    public void deleteById(final Long id) {
+    public int deleteById(final Long id) {
         db.remove(id);
+        return id.intValue();
     }
 
     @Override

@@ -3,13 +3,13 @@ package com.songify.domain.crud;
 import com.songify.domain.crud.dto.ArtistDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RestController
 @RequiredArgsConstructor
+@Service
 class ArtistRetriever {
 
     private final ArtistRepository artistRepository;

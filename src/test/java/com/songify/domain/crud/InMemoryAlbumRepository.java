@@ -1,5 +1,7 @@
 package com.songify.domain.crud;
 
+import org.springframework.data.domain.Pageable;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,14 +16,14 @@ class InMemoryAlbumRepository implements AlbumRepository {
     Map<Long, Album> db = new HashMap<>();
     AtomicInteger index = new AtomicInteger(0);
 
-    @Override
+        @Override
     public Optional<Album> findById(final Long id) {
         Album value = db.get(id);
         return Optional.ofNullable(value);
     }
 
     @Override
-    public int deleteByIdIn(final Set<Long> ids) {
+    public int deleteByIdIn(final Collection<Long> ids) {
         ids.forEach(
                 id -> db.remove(id)
         );
@@ -49,6 +51,11 @@ class InMemoryAlbumRepository implements AlbumRepository {
                 .filter(album -> album.getArtists().stream()
                         .anyMatch(artist -> artist.getId().equals(id)))
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Album> findAll() {
+        return new HashSet<>(db.values());
     }
 
 }

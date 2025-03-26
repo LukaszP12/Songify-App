@@ -31,11 +31,6 @@ class SongInfoTestImpl implements AlbumInfo.SongInfo {
     }
 
     @Override
-    public SongLanguageInfo getSongLanguage() {
-        return null;
-    }
-
-    @Override
     public GenreInfo getGenre() {
         return null;
     }

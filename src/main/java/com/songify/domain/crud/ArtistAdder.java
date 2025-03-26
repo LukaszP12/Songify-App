@@ -15,8 +15,6 @@ class ArtistAdder {
 
     private final ArtistRepository artistRepository;
     private final AlbumAdder albumAdder;
-    private final SongAdder songAdder;
-    private final SongRepository songRepository;
 
     ArtistDto addArtist(final String name) {
         Artist save = saveArtist(name);
@@ -48,4 +46,5 @@ class ArtistAdder {
         artist.addAlbum(album); // <----
         return artistRepository.save(artist);
     }
+
 }

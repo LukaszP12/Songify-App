@@ -1,19 +1,24 @@
 package com.songify.domain.crud;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
 interface AlbumRepository extends Repository<Album, Long> {
 
-    Album save(Album album);
-
     Optional<Album> findById(Long id);
+
+    @Modifying
+    @Query("delete from Album a where a.id in :ids")
+    int deleteByIdIn(Collection<Long> ids);
+
+    Album save(Album album);
 
     @Query("""
             select a from Album a
@@ -27,12 +32,8 @@ interface AlbumRepository extends Repository<Album, Long> {
             inner join a.artists artists 
             where artists.id = :id
             """)
-    Set<Album> findAllAlbumsByArtistId(@Param("id") Long id);
+    Set<Album> findAllAlbumsByArtistId(@Param("id") Long artistId);
 
 
-    @Transactional
-    @Modifying
-    @Query("delete from Album a where a.id in :ids")
-    int deleteByIdIn(Set<Long> ids);
-
+    Set<Album> findAll();
 }

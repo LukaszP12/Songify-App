@@ -13,81 +13,39 @@ import java.util.List;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public
-class SongRetriever {
+public class SongRetriever {
 
     private final SongRepository songRepository;
 
-    private final List<Song> songs = new ArrayList<>();
-
-    public List<SongDto> findAll(Pageable pageable) {
+    List<SongDto> findAll(Pageable pageable) {
         log.info("retrieving all songs: ");
-//        return songRepository.findAll(pageable)
-//                .stream()
-//                .map(song -> SongDto.builder()
-//                        .id(song.getId())
-//                        .name(song.getName())
-//                        .build()).collect(Collectors.toList());
-
-        List<SongDto> songDtoList = new ArrayList<>();
-        List<Song> songs = songRepository.findAll(pageable);
-
-        for (Song song : songs) {
-            Genre genre = song.getGenre();
-            GenreDto genreDto = new GenreDto(genre.getId(), genre.getName());
-
-            SongDto songDto = SongDto.builder()
-                    .id(song.getId())
-                    .name(song.getName())
-                    .genreDto(genreDto)
-                    .build();
-
-            songDtoList.add(songDto);
-        }
-        return songDtoList;
+        return songRepository.findAll(pageable)
+                .stream()
+                .map(song -> SongDto.builder()
+                        .id(song.getId())
+                        .name(song.getName())
+                        .genre(new GenreDto(song.getGenre().getId(), song.getGenre().getName()))
+                        .build())
+                .toList();
     }
 
     SongDto findSongDtoById(Long id) {
-        Song song = songRepository.findById(id)
-                .orElseThrow(() -> new SongNotFoundException("" + id));
-        SongDto songDto = SongDto.builder()
-                .id(song.getId())
-                .name(song.getName())
-                .build();
-        return songDto;
+        return songRepository.findById(id)
+                .map(song -> SongDto.builder()
+                        .id(song.getId())
+                        .name(song.getName())
+                        .build())
+                .orElseThrow(() -> new SongNotFoundException("Song with id " + id + " not found"));
     }
 
-    public List<Song> findByArtistEquals() {
-        return songRepository.findAllByArtistEqualsIgnoreCaseOrderById("Ariana Grande");
-//                .orElseThrow(() -> new SongNotFoundException("Song with id " + "arianagrande" + " not found"));
+    Song findSongById(Long id) {
+        return songRepository.findById(id)
+                .orElseThrow(() -> new SongNotFoundException("Song with id " + id + " not found"));
     }
 
-    public void existsById(Long id) {
+    void existsById(Long id) {
         if (!songRepository.existsById(id)) {
-            throw new SongNotFoundException("" + id);
+            throw new SongNotFoundException("Song with id " + id + " not found");
         }
-    }
-
-    public Song compareSongs() {
-        Song song1 = songRepository.findById(1L)
-                .orElseThrow(() -> new SongNotFoundException("Song with id " + 1L + " not found"));
-
-        log.info(song1);
-        songs.add(song1);
-
-        Song song2 = new Song("Tik Tok", "Ariana Grande");
-        log.info(song2);
-        songs.add(song2);
-
-        for (Song song : songs) {
-            log.info(songs.get(0).equals(songs.get(1)));
-        }
-        return song1;
-    }
-
-    public Song findSongById(Long id) {
-        Song song = songRepository.findById(id)
-                .orElseThrow(() -> new SongNotFoundException("" + id));
-        return song;
     }
 }

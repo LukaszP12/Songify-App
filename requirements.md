@@ -40,3 +40,12 @@ given there are 2 songs, artists, albums and genres created before
 5. when I post to /genre with Genre "Rap" then Genre "Rap" is returned with id 1
 6. when I go to /songs/1 then I can see default genre
 7. when I put to /songs/1/genre/1 then Genre with id 1 ("Rap") is added to Song with id 1 ("Till I collapse")
+8. when I go to /song/1 then I can see "Rap" genre
+9. when I put to /song/2/genre/1 then Genre with id 1 ("Rap") is added to Song with id 2 ("Lose Yourself")
+10. when I go to /album then I can see no albums
+11. when I post to /album with Album "EminemAlbum1" and Song with id 1 then Album "EminemAlbum1" is returned with id 1
+12. when I go to /album/1 then I can see song with id 1 added to it
+13. when I put to /album/1/song/1 then Song with id 1 ("Til I collapse") is added to Album with id 1 ("EminemAlbum1")
+14. when I go to /albums/1 then I can see album with single song with id 1 and single artist with id 1
+15. when I put to /albums/1/songs/2 then Song with id 2 ("Lose Yourself") is added to Album with id 1 ("EminemAlbum1")
+16. when I go to /albums/1 then I can see album with 2 songs (id1 and id2)
