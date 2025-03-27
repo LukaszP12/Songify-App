@@ -9,7 +9,7 @@ import com.songify.infrastructure.songplayer.controller.dto.response.SongDto;
 public class SongDomainMapper {
 
     public static SongDto mapFromSongToSongDto(Song song) {
-        return new SongDto(song.getId(), song.getName(), song.getArtist());
+        return new SongDto(song.getId(), song.getName());
     }
 
     public static Song mapFromSongRequestDtoToSong(SongRequestDto dto) {
@@ -17,14 +17,14 @@ public class SongDomainMapper {
     }
 
     public static Song mapFromCreateSongRequestDtoToSong(CreateSongRequestDto dto) {
-        return new Song(dto.songName(), dto.artistName());
+        return new Song(dto.songName());
     }
 
     public static Song mapFromUpdateSongRequestDtoToSongDto(UpdateSongRequestDto dto) {
-        return new Song(dto.songName(), dto.artistName());
+        return new Song(dto.songName());
     }
 
     public static Song mapFromPartiallyUpdateSongRequestDtoToSong(PartiallyUpdateSongRequestDto dto) {
-        return new Song(dto.songName(), dto.artistName());
+        return new Song(dto.songName());
     }
 }

@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter(AccessLevel.PACKAGE)
 @Setter(AccessLevel.PACKAGE)
-class Genre extends BaseEntity {
+public class Genre extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "genre_id_seq", strategy = GenerationType.SEQUENCE)

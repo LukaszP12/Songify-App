@@ -25,7 +25,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter(AccessLevel.PACKAGE)
 @Setter(AccessLevel.PACKAGE)
-class Album extends BaseEntity {
+public class Album extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "album_id_seq", strategy = GenerationType.SEQUENCE)
