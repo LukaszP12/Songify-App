@@ -2,6 +2,7 @@ package feature;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.songify.SongifyApplication;
+import com.songify.infrastructure.crud.album.ErrorAlbumResponseDto;
 import com.songify.infrastructure.songplayer.controller.dto.response.GetAllSongsResponseDto;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -43,6 +45,10 @@ public class HappyPathIntegrationTest {
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15-alpine");
 
+    static {
+        postgreSQLContainer.start();
+    }
+
     @Autowired
     public MockMvc mockMvc;
 
@@ -62,34 +68,26 @@ public class HappyPathIntegrationTest {
         ResultActions perform = mockMvc.perform(get("/songs")
                 .contentType(MediaType.APPLICATION_JSON));
         // then
-        MvcResult getSongsActionResult = perform.andExpect(status().isOk())
-                .andReturn();
-
-        String contentAsString = getSongsActionResult.getResponse().getContentAsString();
-        GetAllSongsResponseDto allSongsResponseDto = objectMapper.readValue(contentAsString, GetAllSongsResponseDto.class);
-        assertThat(allSongsResponseDto.songs()).hasSize(10);
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.songs", empty()));
 
 // 2. when I post to /songs with Song "Till I collapse" then Song "Till I collapse" is returned with id 1
-        // given
-        ResultActions perform1 = mockMvc.perform(post("/songs")
-                .content("""
-                        {
-                           "name": "Till i collapse",
-                           "releaseDate": "2024-03-15T13:55:21.850Z",
-                           "duration": 0,
-                           "language": "ENGLISH"
-                        }
-                        """)
-                .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        String contentAsString1 = perform1.andReturn().getResponse().getContentAsString();
-        // when
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$.song.name", is("Till i collapse")));
-
-        // then
-
+        mockMvc.perform(post("/songs")
+                        .content("""
+                                {
+                                   "name": "Till i collapse",
+                                   "releaseDate": "2024-03-15T13:55:21.850Z",
+                                   "duration": 0,
+                                   "language": "ENGLISH"
+                                }
+                                """)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.song.id", is(1)))
+                .andExpect(jsonPath("$.song.name", is("Till i collapse")))
+                .andExpect(jsonPath("$.song.genre.id", is(1)))
+                .andExpect(jsonPath("$.song.genre.name", is("default")));
 
 // 3. when I post to /songs with Song "Lose Yourself" then Song "Lose Yourself" is returned with id 2
 
