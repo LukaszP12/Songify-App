@@ -6,6 +6,7 @@ import com.songify.domain.crud.dto.AlbumRequestDto;
 import com.songify.domain.crud.dto.ArtistDto;
 import com.songify.domain.crud.dto.ArtistRequestDto;
 import com.songify.domain.crud.dto.SongDto;
+import com.songify.domain.crud.dto.SongLanguageDto;
 import com.songify.domain.crud.dto.SongRequestDto;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Set;
 
-import static com.songify.domain.crud.SongLanguage.ENGLISH;
 import static com.songify.domain.crud.SongifyCrudFacadeConfiguration.createSongifyCrud;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -116,10 +116,11 @@ public class SongifyCrudFacadeTest {
         Long artistId = songifyCrudFacade.addArtist(shawnMendes).id();
         SongRequestDto song = SongRequestDto.builder()
                 .name("song1")
-                .language(ENGLISH)
+                .language(SongLanguageDto.ENGLISH)
                 .build();
         SongDto songDto = songifyCrudFacade.addSong(song);
         Long songId = songDto.id();
+
         AlbumDto albumDto = songifyCrudFacade.addAlbumWithSongs(AlbumRequestDto
                 .builder()
                 .songsIds(Set.of(songId))
@@ -138,7 +139,7 @@ public class SongifyCrudFacadeTest {
         assertThat(throwable.getMessage()).isEqualTo("Song with id 0 not found");
         Throwable throwable2 = catchThrowable(() -> songifyCrudFacade.findAlbumById(albumId));
         assertThat(throwable2).isInstanceOf(AlbumNotFoundException.class);
-        assertThat(throwable2.getMessage()).isEqualTo("Album with id: 0 not found");
+        assertThat(throwable2.getMessage()).isEqualTo("album with id: 0 not found");
     }
 
     @Test
@@ -146,7 +147,7 @@ public class SongifyCrudFacadeTest {
         // given
         SongRequestDto songRequestDto = SongRequestDto.builder()
                 .name("song1")
-                .language(ENGLISH)
+                .language(SongLanguageDto.ENGLISH)
                 .build();
         SongDto songDto = songifyCrudFacade.addSong(songRequestDto);
         AlbumRequestDto album = AlbumRequestDto
@@ -175,7 +176,7 @@ public class SongifyCrudFacadeTest {
         Long artistId = songifyCrudFacade.addArtist(shawnMendes).id();
         SongRequestDto song = SongRequestDto.builder()
                 .name("song1")
-                .language(ENGLISH)
+                .language(SongLanguageDto.ENGLISH)
                 .build();
         SongDto songDto = songifyCrudFacade.addSong(song);
         Long songId = songDto.id();
@@ -203,7 +204,7 @@ public class SongifyCrudFacadeTest {
         // given
         SongRequestDto song = SongRequestDto.builder()
                 .name("song1")
-                .language(ENGLISH)
+                .language(SongLanguageDto.ENGLISH)
                 .build();
         assertThat(songifyCrudFacade.findAllSongs(Pageable.unpaged())).isEmpty();
         // when
@@ -216,12 +217,28 @@ public class SongifyCrudFacadeTest {
     }
 
     @Test
+    @DisplayName("should retrieve song with genre")
+    public void should_retrieve_song() {
+        // given
+        SongRequestDto song = SongRequestDto.builder()
+                .name("song1")
+                .language(SongLanguageDto.ENGLISH)
+                .build();
+        SongDto songDto = songifyCrudFacade.addSong(song);
+        // when
+        SongDto songDtoById = songifyCrudFacade.findSongDtoById(songDto.id());
+        // then
+        assertThat(songDtoById.genre().name()).isEqualTo("default");
+        assertThat(songDtoById.genre().id()).isEqualTo(1);
+    }
+
+    @Test
     @DisplayName("should return album by id")
     public void should_return_album_by_id() {
         // given
         SongRequestDto song = SongRequestDto.builder()
                 .name("song1")
-                .language(ENGLISH)
+                .language(SongLanguageDto.ENGLISH)
                 .build();
         SongDto songDto = songifyCrudFacade.addSong(song);
         Long songId = songDto.id();
@@ -235,7 +252,7 @@ public class SongifyCrudFacadeTest {
         AlbumDto albumById = songifyCrudFacade.findAlbumById(albumId);
         // then
         assertThat(albumById)
-                .isEqualTo(new AlbumDto(albumId, "album title 1"));
+                .isEqualTo(new AlbumDto(albumId, "album title 1", Set.of(songDto.id())));
     }
 
     @Test
@@ -278,7 +295,7 @@ public class SongifyCrudFacadeTest {
 
         SongRequestDto song = SongRequestDto.builder()
                 .name("song1")
-                .language(ENGLISH)
+                .language(SongLanguageDto.ENGLISH)
                 .build();
         SongDto songDto = songifyCrudFacade.addSong(song);
         Long songId = songDto.id();
@@ -311,39 +328,37 @@ public class SongifyCrudFacadeTest {
         Long artistId = songifyCrudFacade.addArtist(shawnMendes).id();
         SongRequestDto song = SongRequestDto.builder()
                 .name("song1")
-                .language(ENGLISH)
-                .build();
-        SongRequestDto song1 = SongRequestDto.builder()
-                .name("song2")
-                .language(ENGLISH)
+                .language(SongLanguageDto.ENGLISH)
                 .build();
         SongRequestDto song2 = SongRequestDto.builder()
-                .name("song3")
-                .language(ENGLISH)
+                .name("song2")
+                .language(SongLanguageDto.ENGLISH)
                 .build();
         SongRequestDto song3 = SongRequestDto.builder()
-                .name("song4")
-                .language(ENGLISH)
+                .name("song3")
+                .language(SongLanguageDto.ENGLISH)
                 .build();
-
-        SongDto songDto1 = songifyCrudFacade.addSong(song);
-        SongDto songDto2 = songifyCrudFacade.addSong(song1);
-        SongDto songDto3 = songifyCrudFacade.addSong(song2);
-        SongDto songDto4 = songifyCrudFacade.addSong(song3);
-        Long songId1 = songDto1.id();
+        SongRequestDto song4 = SongRequestDto.builder()
+                .name("song4")
+                .language(SongLanguageDto.ENGLISH)
+                .build();
+        SongDto songDto = songifyCrudFacade.addSong(song);
+        SongDto songDto2 = songifyCrudFacade.addSong(song2);
+        SongDto songDto3 = songifyCrudFacade.addSong(song3);
+        SongDto songDto4 = songifyCrudFacade.addSong(song4);
+        Long songId = songDto.id();
         Long songId2 = songDto2.id();
         Long songId3 = songDto3.id();
         Long songId4 = songDto4.id();
-
         AlbumDto albumDto = songifyCrudFacade.addAlbumWithSongs(AlbumRequestDto
                 .builder()
-                .songsIds(Set.of(songId1, songId2))
-                .title("album title 1")
+                .songsIds(Set.of(songId, songId2))
+                .title("album1")
                 .build());
         AlbumDto albumDto2 = songifyCrudFacade.addAlbumWithSongs(AlbumRequestDto
                 .builder()
                 .songsIds(Set.of(songId3, songId4))
-                .title("album title 1")
+                .title("album2")
                 .build());
         Long albumId = albumDto.id();
         Long albumId2 = albumDto2.id();
@@ -358,8 +373,8 @@ public class SongifyCrudFacadeTest {
         songifyCrudFacade.deleteArtistByIdWithAlbumsAndSongs(artistId);
         // then
         assertThat(songifyCrudFacade.findAllArtists(Pageable.unpaged())).isEmpty();
-        assertThat(songifyCrudFacade.findAllAlbums()).isNotEmpty();
-        assertThat(songifyCrudFacade.findAllSongs(Pageable.unpaged())).isNotEmpty();
+        assertThat(songifyCrudFacade.findAllAlbums()).isEmpty();
+        assertThat(songifyCrudFacade.findAllSongs(Pageable.unpaged())).isEmpty();
     }
 
 }
