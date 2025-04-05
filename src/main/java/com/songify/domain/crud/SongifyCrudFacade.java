@@ -25,8 +25,10 @@ public class SongifyCrudFacade {
     private final SongRetriever songRetriever;
     private final SongUpdater songUpdater;
     private final SongDeleter songDeleter;
+    private final SongAssigner songAssigner;
     private final SongAdder songAdder;
     private final ArtistAdder artistAdder;
+    private final GenreRetriever genreRetriever;
     private final GenreAdder genreAdder;
     private final AlbumAdder albumAdder;
     private final ArtistRetriever artistRetriever;
@@ -34,14 +36,12 @@ public class SongifyCrudFacade {
     private final ArtistDeleter artistDeleter;
     private final ArtistAssigner artistAssigner;
     private final ArtistUpdater artistUpdater;
+    private final GenreAssigner genreAssigner;
 
     public ArtistDto addArtist(ArtistRequestDto dto) {
         return artistAdder.addArtist(dto.name());
     }
 
-    public GenreDto addGenre(GenreRequestDto dto) {
-        return genreAdder.addGenre(dto.name());
-    }
 
     public AlbumDto addAlbumWithSongs(AlbumRequestDto albumRequestDto) {
         return albumAdder.addAlbum(albumRequestDto.songsIds(),
@@ -126,8 +126,7 @@ public class SongifyCrudFacade {
     }
 
     public SongDto findSongDtoById(Long id) {
-        SongDto songDtoById = songRetriever.findSongDtoById(id);
-        return songDtoById;
+        return songRetriever.findSongDtoById(id);
     }
 
     long countArtistsByAlbumId(final Long albumId) {
@@ -140,5 +139,26 @@ public class SongifyCrudFacade {
 
     public Set<AlbumDto> findAllAlbums() {
         return albumRetriever.findAll();
+    }
+
+    public GenreDto addGenre(GenreRequestDto dto) {
+        return genreAdder.addGenre(dto.name());
+    }
+
+    public GenreDto findGenre(Long genreId) {
+        Genre genreById = genreRetriever.findGenreById(genreId);
+        return new GenreDto(genreById.getId(), genreById.getName());
+    }
+
+    public Set<GenreDto> retrieveGenres() {
+        return genreRetriever.findAllGenres();
+    }
+
+    public void assignGenreToSong(Long genreId, Long songId) {
+        genreAssigner.assignGenreToSong(genreId, songId);
+    }
+
+    public AlbumDto addSongToAlbum(Long albumId, Long songId) {
+        return songAssigner.assignSongToAlbum(albumId, songId);
     }
 }

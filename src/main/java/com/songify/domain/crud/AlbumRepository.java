@@ -1,6 +1,5 @@
 package com.songify.domain.crud;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
@@ -22,8 +21,8 @@ interface AlbumRepository extends Repository<Album, Long> {
 
     @Query("""
             select a from Album a
-            join fetch a.songs songs
-            join fetch a.artists artists
+            left join fetch a.songs songs
+            left join fetch a.artists artists
             where a.id = :id""")
     Optional<AlbumInfo> findAlbumByIdWithSongsAndArtists(Long id);
 

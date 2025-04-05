@@ -39,7 +39,6 @@ import static com.songify.infrastructure.songplayer.controller.SongControllerMap
 import static com.songify.infrastructure.songplayer.controller.SongControllerMapper.mapFromSongToGetSongResponseDto;
 import static com.songify.infrastructure.songplayer.controller.SongControllerMapper.mapFromSongToUpdateSongResponseDto;
 import static com.songify.infrastructure.songplayer.controller.SongControllerMapper.mapFromUpdateSongRequestDtoToSongDto;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Log4j2
 @RestController
@@ -65,7 +64,7 @@ public class SongController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid SongRequestDto request) {
         SongDto savedSongDto = songFacade.addSong(request);
         CreateSongResponseDto body = mapFromSongToCreateSongResponseDto(savedSongDto);
@@ -98,6 +97,13 @@ public class SongController {
         log.info("Updated song with id: " + id
                 + " with new name: " + newSongDto.name());
         return ResponseEntity.ok(body);
+    }
+
+    @PutMapping("/{songId}/genres/{genreId}")
+    public ResponseEntity<String> update(@PathVariable Long songId,
+                                         @PathVariable Long genreId) {
+        songFacade.assignGenreToSong(genreId, songId);
+        return ResponseEntity.ok("updated");
     }
 
     @PatchMapping("/{id}")

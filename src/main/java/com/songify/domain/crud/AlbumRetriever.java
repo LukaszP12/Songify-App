@@ -3,7 +3,6 @@ package com.songify.domain.crud;
 import com.songify.domain.crud.dto.AlbumDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -35,8 +34,10 @@ class AlbumRetriever {
     Set<AlbumDto> findAlbumsDtoByArtistId(final Long artistId) {
         return albumRepository.findAllAlbumsByArtistId(artistId)
                 .stream().map(
-                        album -> new AlbumDto(album.getId(), album.getTitle())
-                ).collect(Collectors.toSet());
+                        album -> new AlbumDto(album.getId(),
+                                album.getTitle(),
+                                album.getSongsIds()))
+                .collect(Collectors.toSet());
     }
 
     Album findById(final Long albumId) {
@@ -48,13 +49,18 @@ class AlbumRetriever {
 
     AlbumDto findDtoById(Long albumId) {
         Album AlbumById = findById(albumId);
-        return new AlbumDto(AlbumById.getId(), AlbumById.getTitle());
+        return new AlbumDto(
+                AlbumById.getId(),
+                AlbumById.getTitle(),
+                AlbumById.getSongsIds());
     }
 
     Set<AlbumDto> findAll() {
         return albumRepository.findAll()
                 .stream()
-                .map(album -> new AlbumDto(album.getId(), album.getTitle()))
+                .map(album -> new AlbumDto(album.getId(),
+                        album.getTitle(),
+                        album.getSongsIds()))
                 .collect(Collectors.toSet());
     }
 }
